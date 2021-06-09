@@ -24,3 +24,5 @@ const getUserSpecificPosts = async (req, res) => {
 }
 
 router.route('/').get().post().put().delete();
+
+module.exports = router;
