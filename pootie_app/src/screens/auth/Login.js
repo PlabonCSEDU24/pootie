@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     ...FONTS.body3,
   },
   signupTextLink: {
-    color: COLORS.primary,
+    color: COLORS.links,
     paddingLeft: 4,
   },
 });
