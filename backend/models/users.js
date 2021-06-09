@@ -1,8 +1,8 @@
-const { Schema, model } = require('mongoose');
-const jwt = require('jsonwebtoken');
-const joi = require('joi');
-const config = require('config');
-const JWT_SECRET = config.get('JWT_SECRET');
+const { Schema, model } = require("mongoose");
+const jwt = require("jsonwebtoken");
+const joi = require("joi");
+const config = require("config");
+const JWT_SECRET = config.get("JWT_SECRET");
 
 const userSchema = Schema({
   email: {
@@ -23,14 +23,16 @@ const userSchema = Schema({
     maxlength: 100,
     minlength: 5,
   },
+  contact_no: {
+    type: String,
+  },
 });
-
 
 userSchema.methods.getJWT = function () {
   return jwt.sign(
     { _id: this._id, email: this.email, role: this.role },
     process.env.JWT_SECRET || JWT_SECRET,
-    { expiresIn: '72h' }
+    { expiresIn: "72h" }
   );
 };
 
@@ -39,9 +41,10 @@ const validateUser = (user) => {
     email: joi.string().email().required(),
     password: joi.string().min(5).max(255).required(),
     name: joi.string(),
+    contact_no: joi.string().required(),
   });
   return schema.validate(user);
 };
 
-module.exports.User = model('User', userSchema);
+module.exports.User = model("User", userSchema);
 module.exports.validate = validateUser;
