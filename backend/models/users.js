@@ -1,6 +1,8 @@
 const { Schema, model } = require('mongoose');
 const jwt = require('jsonwebtoken');
 const joi = require('joi');
+const config = require('config');
+const JWT_SECRET = config.get('JWT_SECRET');
 
 const userSchema = Schema({
   email: {
@@ -27,7 +29,7 @@ const userSchema = Schema({
 userSchema.methods.getJWT = function () {
   return jwt.sign(
     { _id: this._id, email: this.email, role: this.role },
-    process.env.JWT_SECRET,
+    process.env.JWT_SECRET || JWT_SECRET,
     { expiresIn: '72h' }
   );
 };
