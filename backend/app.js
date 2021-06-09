@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const compression = require("compression");
 const authRouter = require("./routers/authRouter");
+const postRouter = require("./routers/postRouter");
 const mongoose = require("mongoose");
 
 const PORT = config.get("DEV_BACKEND_PORT");
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.use("/api/users", authRouter);
+app.use("/api/posts", postRouter);
 
 mongoose
   .connect(dbAddress, {
