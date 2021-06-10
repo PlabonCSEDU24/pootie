@@ -26,6 +26,9 @@ const userSchema = Schema({
   contact_no: {
     type: String,
   },
+  profilePhoto: {
+    type: String,
+  }
 });
 
 userSchema.methods.getJWT = function () {

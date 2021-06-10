@@ -36,7 +36,7 @@ const updatePost = async (req, res) => {
     });
     res.send(data);
   } catch (error) {
-    return res.status(400).isend(error);
+    return res.status(400).send(error);
   }
 };
 
