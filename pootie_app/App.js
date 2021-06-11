@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import AuthStack from "./src/navigators/AuthStack";
+import TabNavigator from "./src/navigators/TabNavigator";
+import DrawerNavigator from "./src/navigators/DrawerNavigator";
 
 const theme = {
   ...DefaultTheme,
@@ -38,7 +39,7 @@ export default function App() {
   }
   return (
     <NavigationContainer theme={theme}>
-      <AuthStack />
+      <DrawerNavigator />
     </NavigationContainer>
   );
 }
