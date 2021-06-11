@@ -3,7 +3,7 @@ const { Schema, model } = require('mongoose');
 const postSchema = Schema({
   userId: {
     type: Schema.Types.ObjectId,
-    immutable: true,  
+    immutable: true,
   },
   bookName: {
     type: String,
@@ -26,6 +26,9 @@ const postSchema = Schema({
     currency: { type: String },
     amount: { type: Number },
   },
+  photos: [
+    { type: String }
+  ],
   comments: [
     {
       commentatorId: { type: Schema.Types.ObjectId },
