@@ -5,6 +5,7 @@ module.exports = async (req, res, next) => {
   const userId = req.user._id;
   try {
     const post = await Post.findById(postId);
+    console.log(post.userId, userId);
     if (post.userId == userId) next();
     else return res.status(400).send("You can only edit your posts");
   } catch (err) {

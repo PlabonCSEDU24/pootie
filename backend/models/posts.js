@@ -3,6 +3,7 @@ const { Schema, model } = require('mongoose');
 const postSchema = Schema({
   userId: {
     type: Schema.Types.ObjectId,
+    immutable: true,  
   },
   bookName: {
     type: String,
