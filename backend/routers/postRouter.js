@@ -5,7 +5,9 @@ const authorize = require("../middlewares/authorize");
 const postAuthorize = require("../middlewares/postAuthorize");
 const commentAuthorize = require("../middlewares/commentAuthorize");
 const { Post } = require("../models/posts");
-const ObjectId = require("mongoose").Types.ObjectId;
+const { Comment } = require("../models/comments");
+
+const resErrorMessage = "Something went wrong with database";
 
 const addNewPost = async (req, res) => {
   const userId = req.user._id;
@@ -27,25 +29,18 @@ const deletePost = async (req, res) => {
     if (data) res.send(data);
     else return res.status(400).send("This post doesn't exist!");
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(400).send(resErrorMessage);
   }
 };
 
 const updatePost = async (req, res) => {
   try {
-    if (req.body.comments.length > 0) {
-      return res
-        .status(400)
-        .send(
-          "Use /api/posts/:postId/comments/:commentId for updating comments"
-        );
-    }
     const data = await Post.findByIdAndUpdate(req.params.postId, req.body, {
       new: true,
     });
     res.send(data);
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(400).send(resErrorMessage);
   }
 };
 
@@ -59,7 +54,7 @@ const getPostById = async (req, res) => {
     const data = await Post.findById(req.params.postId);
     res.send(data);
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(400).send(resErrorMessage);
   }
 };
 
@@ -69,82 +64,80 @@ const getUserSpecificPosts = async (req, res) => {
     const data = await Post.find({ userId: userId });
     res.send(data);
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(400).send(resErrorMessage);
   }
 };
 
 const getAllCommentFromPost = async (req, res) => {
   try {
     const { comments } = await Post.findById(req.params.postId);
-    res.send(comments);
+    const commentsWithDescription = [];
+    for (commentId of comments) {
+      const comment = await Comment.findById(commentId);
+      commentsWithDescription.push(comment);
+    }
+    res.send(commentsWithDescription);
   } catch (error) {
-    return res.status(400).send(error);
+    console.log(error);
+    return res.status(400).send(resErrorMessage);
   }
 };
 
 const getCommentFromPost = async (req, res) => {
   try {
-    const data = await Post.find(
-      {
-        $and: [
-          { _id: ObjectId(req.params.postId) },
-          { "comments._id": ObjectId(req.params.commentId) },
-        ],
-      },
-      {
-        comments: {
-          $elemMatch: { _id: ObjectId(req.params.commentId) },
-        },
-        _id: 0,
-      }
-    );
-    const [
-      {
-        ["comments"]: [ret],
-      },
-    ] = data;
-
-    res.send(ret);
+    const data = await Comment.findById(req.params.commentId);
+    res.send(data);
   } catch (error) {
     console.error(error);
-    return res.status(400).send(error);
+    return res.status(400).send(resErrorMessage);
   }
 };
 
 const addCommentToPost = async (req, res) => {
-  const newComment = { ...req.body, commentatorId: req.user._id };
   try {
-    const ret = await Post.findByIdAndUpdate(
-      { _id: req.params.postId },
-      { $push: { comments: newComment } },
-      { new: true }
-    );
-    res.send(ret.comments[ret.comments.length - 1]);
+    const comment = new Comment({
+      ...req.body,
+      name: req.user.name,
+      userId: req.user._id,
+      postId: req.params.postId,
+    });
+    const savedComment = await comment.save();
+    const updatedPost = await Post.findByIdAndUpdate(req.params.postId, {
+      $push: { comments: savedComment._id },
+    });
+    return res.status(201).send(savedComment);
   } catch (error) {
     console.log(error);
-    return res.status(400).send(error);
+    return res.status(400).send(resErrorMessage);
   }
 };
 
 const deleteCommentFromPost = async (req, res) => {
-  console.log("ok");
   try {
-    const ret = await Post.findByIdAndUpdate(
-      { _id: req.params.postId },
-      { $pull: { "comments._id": req.params.commentId } },
-      { new: true }
-    );
-    res.send(ret);
+    const del = await Comment.findByIdAndDelete(req.params.commentId);
+    const delFromPost = await Post.findByIdAndUpdate(req.params.postId, {
+      $pull: { comments: req.params.commentId },
+    });
+    res.send(del);
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(400).send(resErrorMessage);
   }
 };
 
 const editCommentFromPost = async (req, res) => {
-  res.send("aha");
+  try {
+    const updateComment = await Comment.findByIdAndUpdate(
+      req.params.commentId,
+      { ...req.body },
+      { new: true }
+    );
+    res.send(updateComment);
+  } catch (e) {
+    return res.status(400).send(resErrorMessage);
+  }
 };
 
-router.route("/").get(getAllPosts).post(authorize, addNewPost);
+router.route("/").get(getAllPosts).post([authorize, postAuthorize], addNewPost);
 
 router
   .route("/:postId")

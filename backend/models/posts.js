@@ -30,12 +30,7 @@ const postSchema = Schema({
     { type: String }
   ],
   comments: [
-    {
-      commentatorId: { type: Schema.Types.ObjectId },
-      commentatorName: { type: String },
-      comment: { type: String },
-      time: { type: Date, default: Date.now() },
-    },
+    { type: Schema.Types.ObjectId }
   ],
 });
 
