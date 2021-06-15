@@ -1,9 +1,10 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model } = require("mongoose");
 
 const postSchema = Schema({
   userId: {
     type: Schema.Types.ObjectId,
     immutable: true,
+    ref: "User",
   },
   bookName: {
     type: String,
@@ -26,12 +27,17 @@ const postSchema = Schema({
     currency: { type: String },
     amount: { type: Number },
   },
-  photos: [
-    { type: String }
-  ],
-  comments: [
-    { type: Schema.Types.ObjectId }
-  ],
+  photos: {
+    type: Schema.Types.Array,
+    validate: {
+      validator: (val) => {
+        console.log(val);
+        return val.length <= 5;
+      },
+      message: "aaaaa",
+    },
+  },
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
 });
 
-module.exports.Post = model('Post', postSchema);
+module.exports.Post = model("Post", postSchema);

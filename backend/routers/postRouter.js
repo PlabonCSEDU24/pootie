@@ -6,6 +6,7 @@ const postAuthorize = require("../middlewares/postAuthorize");
 const commentAuthorize = require("../middlewares/commentAuthorize");
 const { Post } = require("../models/posts");
 const { Comment } = require("../models/comments");
+const postImageRouter = require("./postImageRouter");
 
 const resErrorMessage = "Something went wrong with database";
 
@@ -144,6 +145,8 @@ router
   .get(authorize, getPostById)
   .put([authorize, postAuthorize], updatePost)
   .delete([authorize, postAuthorize], deletePost);
+
+router.use("/:postId/photos", authorize, postAuthorize, postImageRouter);
 
 router
   .route("/:postId/comments")

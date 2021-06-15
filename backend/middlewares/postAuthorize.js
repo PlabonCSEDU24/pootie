@@ -14,6 +14,7 @@ module.exports = async (req, res, next) => {
               "Use /api/posts/:postId/comments/:commentId for updating comments"
             );
         } else {
+          req.post = post;
           next();
         }
       } else return res.status(400).send("You can only edit your posts");
@@ -29,6 +30,7 @@ module.exports = async (req, res, next) => {
       }
     }
   } catch (err) {
-    return res.status(400).send(err);
+    console.log(err);
+    return res.status(400).send('Something went wrong with database!');
   }
 };

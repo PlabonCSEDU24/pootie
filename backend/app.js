@@ -17,6 +17,7 @@ app.use(compression());
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+app.use('/api/contents', express.static('public/'))
 
 app.use("/api/users", authRouter);
 app.use("/api/posts", postRouter);
