@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const authorize = require("../middlewares/authorize");
-const postAuthorize = require("../middlewares/postAuthorize");
 const { Post } = require("../models/posts");
 const multer = require("multer");
 const path = require("path");

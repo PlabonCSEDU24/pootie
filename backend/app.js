@@ -4,7 +4,7 @@ const config = require("config");
 const morgan = require("morgan");
 const cors = require("cors");
 const compression = require("compression");
-const userRouter = require("./routers/authRouter");
+const userRouter = require("./routers/userRouter");
 const postRouter = require("./routers/postRouter");
 const mongoose = require("mongoose");
 
@@ -36,6 +36,6 @@ const server = app.listen(process.env.PORT || PORT, async () => {
   console.log(`server started on port ${PORT}`);
 });
 
-app.use("/", (req, res) => {
-  res.send("YO! Welcome to pootie backend api!");
-});
+// app.use("/", (req, res) => {
+//   res.send("YO! Welcome to pootie backend api! You are prolly seeing this because it is the default response to any request that hasn't been handled");
+// });

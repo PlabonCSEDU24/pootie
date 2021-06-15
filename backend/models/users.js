@@ -27,8 +27,10 @@ const userSchema = Schema({
     type: String,
   },
   profilePhoto: {
-    type: String,
-  }
+    path: { type: String },
+    fileName: { type: String },
+    fileNameWithoutExt: { type: String },
+  },
 });
 
 userSchema.methods.getJWT = function () {
