@@ -4,7 +4,7 @@ const config = require("config");
 const morgan = require("morgan");
 const cors = require("cors");
 const compression = require("compression");
-const authRouter = require("./routers/authRouter");
+const userRouter = require("./routers/authRouter");
 const postRouter = require("./routers/postRouter");
 const mongoose = require("mongoose");
 
@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use('/api/contents', express.static('public/'))
 
-app.use("/api/users", authRouter);
+app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
 
 mongoose
