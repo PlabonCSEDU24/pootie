@@ -11,6 +11,7 @@ const postSchema = Schema({
     required: true,
     maxlength: 255,
   },
+  categories: [{ type: Schema.Types.ObjectId, ref: "Category" }],
   description: {
     type: String,
     maxlength: 1000,

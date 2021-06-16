@@ -7,6 +7,9 @@ const commentAuthorize = require("../middlewares/commentAuthorize");
 const { Post } = require("../models/posts");
 const { Comment } = require("../models/comments");
 const postImageRouter = require("./postImageRouter");
+const postCategoryRouter = require("./postCategoryRouter");
+const { Category } = require("../models/categories");
+const c = require("config");
 
 const resErrorMessage = "Something went wrong with database";
 
@@ -138,7 +141,18 @@ const editCommentFromPost = async (req, res) => {
   }
 };
 
+const getAllPostsOfCategory = async (req, res) => {
+  try {
+    const cat = await Category.findOne({ name: req.params.categoryName });
+    const posts = await Post.find({ categories: cat._id });
+    res.send(posts);
+  } catch (err) {
+    return res.status(400).send(resErrorMessage);
+  }
+};
+
 router.route("/").get(getAllPosts).post([authorize, postAuthorize], addNewPost);
+router.route("/categories/:categoryName").get(authorize, getAllPostsOfCategory);
 
 router
   .route("/:postId")
@@ -147,6 +161,7 @@ router
   .delete([authorize, postAuthorize], deletePost);
 
 router.use("/:postId/photos", authorize, postAuthorize, postImageRouter);
+router.use("/:postId/categories", authorize, postAuthorize, postCategoryRouter);
 
 router
   .route("/:postId/comments")

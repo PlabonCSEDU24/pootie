@@ -36,6 +36,6 @@ const server = app.listen(process.env.PORT || PORT, async () => {
   console.log(`server started on port ${PORT}`);
 });
 
-// app.use("/", (req, res) => {
-//   res.send("YO! Welcome to pootie backend api! You are prolly seeing this because it is the default response to any request that hasn't been handled");
-// });
+app.use("/", (req, res) => {
+  return res.status(400).send("YO! Welcome to pootie backend api! You are prolly seeing this because it is the default response to any request that hasn't been handled");
+});
