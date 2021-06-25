@@ -12,6 +12,7 @@ import { COLORS, SIZES } from "../constants";
 import ProfileStack from "./ProfileStack";
 import HomeStack from "./HomeStack";
 import Profile from "../screens/tabs/Profile";
+import CreatePost from "../screens/tabs/CreatePost";
 
 const Tab = createBottomTabNavigator();
 
@@ -97,7 +98,7 @@ export default function TabNavigator() {
 
         <Tab.Screen
           name={"ActionButton"}
-          component={Login}
+          component={CreatePost}
           options={{
             tabBarIcon: ({ focused }) => (
               <MaterialIcons name="post-add" size={24} color={COLORS.white} />
