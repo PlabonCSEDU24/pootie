@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
@@ -10,7 +11,7 @@ import {
 import FilledButton from "../../components/FilledButton";
 import Input from "../../components/Input";
 import LogoHeader from "../../components/LogoHeader";
-import { COLORS, FONTS, SIZES } from "../../constants";
+import { COLORS, FONTS, icons, SIZES } from "../../constants";
 
 export default function Login({ navigation }) {
   return (
