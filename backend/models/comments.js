@@ -1,4 +1,4 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model } = require("mongoose");
 
 const commentSchema = Schema({
   userId: { type: Schema.Types.ObjectId, required: true },
@@ -8,4 +8,4 @@ const commentSchema = Schema({
   time: { type: Date, default: Date.now() },
 });
 
-module.exports.Comment = model('Comment', commentSchema);
+module.exports.Comment = model("Comment", commentSchema);
