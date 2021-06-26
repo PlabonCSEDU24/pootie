@@ -26,11 +26,16 @@ const userSchema = Schema({
   contact_no: {
     type: String,
   },
+  profilePhoto: {
+    path: { type: String },
+    fileName: { type: String },
+    fileNameWithoutExt: { type: String },
+  },
 });
 
 userSchema.methods.getJWT = function () {
   return jwt.sign(
-    { _id: this._id, email: this.email, role: this.role },
+    { _id: this._id, email: this.email, name: this.name },
     process.env.JWT_SECRET || JWT_SECRET,
     { expiresIn: "72h" }
   );

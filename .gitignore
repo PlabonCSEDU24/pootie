@@ -1,6 +1,9 @@
 /**/node_modules
 .env
 /**/.vscode
+<<<<<<< HEAD
+/**/public
+=======
 # Expo
 .expo
 __generated__
@@ -136,3 +139,4 @@ docs/pages/versions/*/react-native/*.diff
 
 # Pods
 /ios/Pods
+>>>>>>> 361fd87a4f0153462904b5dc5c59fcb1bc17e00c

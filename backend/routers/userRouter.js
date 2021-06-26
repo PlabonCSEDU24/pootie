@@ -3,6 +3,8 @@ const router = express.Router();
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const { User, validate } = require("../models/users");
+const authorize = require("../middlewares/authorize");
+const userImageRouter = require("./userImageRouter");
 
 const createNewUser = async (req, res) => {
   const { error } = validate(req.body);
@@ -63,5 +65,7 @@ router
   .route("/login")
   .post(authUser)
   .get((r, s) => s.send("You need to POST! not GET"));
+
+router.use("/profile-photo", authorize, userImageRouter);
 
 module.exports = router;
