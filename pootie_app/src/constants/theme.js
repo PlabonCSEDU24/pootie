@@ -3,7 +3,7 @@ const { width, height } = Dimensions.get("window");
 
 export const COLORS = {
   // base colors
-  primary: "#6851EA",
+  primary: "#00A6F0",
   secondary: "#25282F",
   // colors
   links: "#f21170",
@@ -77,6 +77,11 @@ export const FONTS = {
     fontFamily: "Roboto-Regular",
     fontSize: SIZES.body4,
     lineHeight: 22,
+  },
+  body3_bangla: {
+    fontFamily: "HindSiliguri-Regular",
+    fontSize: 14,
+    color: COLORS.gray,
   },
 };
 
