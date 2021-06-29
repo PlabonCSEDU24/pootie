@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { COLORS } from "../constants";
 
 const TabBarCustomButton = ({ children, onPress }) => {
@@ -20,6 +20,8 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 35,
     backgroundColor: COLORS.primary,
+    marginLeft: 6,
+    marginRight: 6,
   },
 });
 export default TabBarCustomButton;

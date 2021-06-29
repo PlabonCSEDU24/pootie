@@ -85,10 +85,6 @@ export default (props) => {
           </View>
         )}
       />
-
-      <View style={styles.version}>
-        <DrawerItem label={() => <Text>Ecommerce App Version 1.0</Text>} />
-      </View>
     </View>
   );
 };
@@ -137,9 +133,5 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     paddingLeft: 30,
-  },
-  version: {
-    height: 60,
-    borderTopWidth: 1,
   },
 });

@@ -1,15 +1,13 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Animated, Dimensions, StyleSheet } from "react-native";
 import "react-native-gesture-handler";
 import Home from "../screens/tabs/Home";
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign } from "@expo/vector-icons";
-import { useRef } from "react";
 import Login from "../screens/auth/Login";
 import TabBarCustomButton from "../components/TabBarCustomButton";
 import { COLORS, SIZES } from "../constants";
-import ProfileStack from "./ProfileStack";
 import HomeStack from "./HomeStack";
 import Profile from "../screens/tabs/Profile";
 import CreatePost from "../screens/tabs/CreatePost";
@@ -24,22 +22,7 @@ export default function TabNavigator() {
       <Tab.Navigator
         tabBarOptions={{
           showLabel: false,
-          style: {
-            backgroundColor: "white",
-
-            bottom: 20,
-            marginHorizontal: SIZES.padding,
-            height: 60,
-            borderRadius: 10,
-            position: "absolute",
-            shadowColor: "#000",
-            shadowOpacity: 0.06,
-            shadowOffset: {
-              width: 10,
-              height: 10,
-            },
-            paddingHorizontal: 20,
-          },
+          style: styles.tab,
         }}
       >
         {
@@ -70,7 +53,7 @@ export default function TabNavigator() {
         ></Tab.Screen>
 
         <Tab.Screen
-          name={"Search"}
+          name={"Nearby"}
           component={Home}
           options={{
             tabBarIcon: ({ focused }) => (
@@ -105,6 +88,15 @@ export default function TabNavigator() {
             ),
             tabBarButton: (props) => <TabBarCustomButton {...props} />,
           }}
+          listeners={({ navigation, route }) => ({
+            // Onpress Update....
+            tabPress: (e) => {
+              Animated.spring(tabOffsetValue, {
+                toValue: getWidth() * 2,
+                useNativeDriver: true,
+              }).start();
+            },
+          })}
         ></Tab.Screen>
 
         <Tab.Screen
@@ -172,7 +164,7 @@ export default function TabNavigator() {
 }
 
 function getWidth() {
-  let width = Dimensions.get("window").width;
+  let width = SIZES.width;
 
   // Horizontal Padding = 20...
   width = width - 80;
@@ -182,10 +174,13 @@ function getWidth() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+  tab: {
+    backgroundColor: "white",
+    bottom: 20,
+    marginHorizontal: SIZES.padding,
+    height: 60,
+    borderRadius: 10,
+    position: "absolute",
+    paddingHorizontal: 20,
   },
 });

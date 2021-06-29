@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import TabNavigator from "./src/navigators/TabNavigator";
 import DrawerNavigator from "./src/navigators/DrawerNavigator";
+import GlobalState from "./src/context/GlobalState";
 
 const theme = {
   ...DefaultTheme,
@@ -38,8 +38,10 @@ export default function App() {
     );
   }
   return (
-    <NavigationContainer theme={theme}>
-      <DrawerNavigator />
-    </NavigationContainer>
+    <GlobalState>
+      <NavigationContainer theme={theme}>
+        <DrawerNavigator />
+      </NavigationContainer>
+    </GlobalState>
   );
 }
