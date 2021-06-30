@@ -13,7 +13,7 @@ const HomeStack = () => {
         component={Home}
         options={({ navigation, route }) => ({
           headerTitle: () => (
-            <CustomHeader navigation={navigation} title={"POOTIE"} />
+            <CustomHeader navigation={navigation} title={"পু টি"} />
           ),
         })}
       />

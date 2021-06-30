@@ -11,7 +11,7 @@ const CustomHeader = ({ navigation, title }) => {
       <Feather
         name="menu"
         size={24}
-        color="black"
+        color={COLORS.lightGray}
         style={styles.menuIcon}
         onPress={handleDrawer}
       />
@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...FONTS.body3,
-    letterSpacing: 14,
     color: COLORS.lightGray,
   },
 });

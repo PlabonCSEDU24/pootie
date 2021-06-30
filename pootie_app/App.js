@@ -18,6 +18,8 @@ const fetchFonts = () => {
     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
     "Roboto-Black": require("./assets/fonts/Roboto-Black.ttf"),
     "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
+    "HindSiliguri-SemiBold": require("./assets/fonts/HindSiliguri-SemiBold.ttf"),
+    "HindSiliguri-Regular": require("./assets/fonts/HindSiliguri-Regular.ttf"),
   });
 };
 
