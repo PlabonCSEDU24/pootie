@@ -5,6 +5,10 @@ const bcrypt = require("bcrypt");
 const { User, validate } = require("../models/users");
 const authorize = require("../middlewares/authorize");
 const userImageRouter = require("./userImageRouter");
+const jwt = require("jsonwebtoken");
+const config = require("config");
+const { route } = require("./userImageRouter");
+const JWT_SECRET = config.get("JWT_SECRET");
 
 const createNewUser = async (req, res) => {
   const { error } = validate(req.body);
@@ -48,6 +52,16 @@ const authUser = async (req, res) => {
   });
 };
 
+const authWithToken = async (req, res) => {
+  const token = req.body.token;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || JWT_SECRET);
+    return res.status(200).send(decoded);
+  } catch (err) {
+    return res.status(400).send("Not a valid token!");
+  }
+};
+
 router
   .route("/")
   .get((req, res) => {
@@ -65,6 +79,8 @@ router
   .route("/login")
   .post(authUser)
   .get((r, s) => s.send("You need to POST! not GET"));
+
+router.route("/login/token").post(authWithToken);
 
 router.use("/profile-photo", authorize, userImageRouter);
 

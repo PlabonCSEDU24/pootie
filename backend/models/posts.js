@@ -1,5 +1,13 @@
 const { Schema, model } = require("mongoose");
 
+const commentSchema = Schema({
+  userId: { type: Schema.Types.ObjectId, required: true },
+  postId: { type: Schema.Types.ObjectId, required: true },
+  name: { type: String },
+  comment: { type: String, required: true },
+  time: { type: Date, default: Date.now() },
+});
+
 const postSchema = Schema({
   userId: {
     type: Schema.Types.ObjectId,
@@ -11,7 +19,7 @@ const postSchema = Schema({
     required: true,
     maxlength: 255,
   },
-  categories: [{ type: Schema.Types.ObjectId, ref: "Category" }],
+  categories: [{ type: String }],
   description: {
     type: String,
     maxlength: 1000,
@@ -28,17 +36,12 @@ const postSchema = Schema({
     currency: { type: String },
     amount: { type: Number },
   },
-  photos: {
-    type: Schema.Types.Array,
-    validate: {
-      validator: (val) => {
-        console.log(val);
-        return val.length <= 5;
-      },
-      message: "aaaaa",
+  photos: [
+    {
+      type: String,
     },
-  },
-  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  ],
+  comments: [commentSchema],
 });
 
 module.exports.Post = model("Post", postSchema);
