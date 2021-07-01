@@ -1,21 +1,11 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { COLORS, FONTS, SIZES } from "../constants";
 
-const FilledButton = ({ title, onPress, style, loading }) => {
+const FilledButton = ({ title, onPress, style }) => {
   return (
     <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
-      {loading ? (
-        <ActivityIndicator size="small" color={COLORS.white} />
-      ) : (
-        <Text style={styles.text}>{title}</Text>
-      )}
+      <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -26,7 +16,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.primary,
     width: "100%",
-    minHeight: 52,
     alignItems: "center",
     justifyContent: "center",
     padding: SIZES.padding_fields,

@@ -1,10 +1,8 @@
-import React, { useState, useContext } from "react";
-import { useHttpClient } from "../../utils/http-hook";
-import { BACKEND_URL } from "../../constants/config";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
@@ -13,82 +11,30 @@ import {
 import FilledButton from "../../components/FilledButton";
 import Input from "../../components/Input";
 import LogoHeader from "../../components/LogoHeader";
-import { COLORS, FONTS, SIZES } from "../../constants";
-import Context from "../../context/Context";
-const { login, setUser } = useContext(Context);
+import { COLORS, FONTS, icons, SIZES } from "../../constants";
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { isLoading, error, sendRequest } = useHttpClient();
-
-  const storeToken = async (value) => {
-    try {
-      await AsyncStorage.setItem("auth_token", value);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const sendLoginRequest = async () => {
-    try {
-      const responseData = await sendRequest(
-        BACKEND_URL + "/api/users/login",
-        "POST",
-        JSON.stringify({
-          email: email,
-          password: password,
-        }),
-        {
-          "Content-Type": "application/json",
-        }
-      );
-      //maybe check for response data
-      if (responseData) {
-        setUser(responseData.user);
-      }
-      console.log(responseData);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const handleLogin = () => {
-    sendLoginRequest();
-  };
-
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss;
-        }}
-      >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.inner}>
           <LogoHeader />
           <Text style={styles.heading}>Login</Text>
-
           <Input
-            value={email}
-            onChangeText={(text) => setEmail(text)}
             style={styles.input}
             placeholder={"Email"}
             keyboardType={"email-address"}
-            autoCapitalize="none"
           />
 
           <Input
-            value={password}
-            onChangeText={(text) => setPassword(text)}
             style={styles.input}
             placeholder={"Password"}
             secureTextEntry
           />
-          <Text style={styles.errorText}>{error}</Text>
           <FilledButton
             title={"Login"}
             style={styles.button}
-            loading={isLoading}
-            onPress={handleLogin}
+            onPress={Keyboard.dismiss}
           />
           <View style={styles.signupTextContainer}>
             <Text style={styles.signupText}>{"NO PREVIOUS ACCOUNT?"}</Text>
@@ -137,8 +83,5 @@ const styles = StyleSheet.create({
   signupTextLink: {
     color: COLORS.links,
     paddingLeft: 4,
-  },
-  errorText: {
-    color: COLORS.links,
   },
 });
