@@ -10,9 +10,9 @@ module.exports = async (req, res, next) => {
         if (req.body.comments) {
           return res
             .status(400)
-            .send(
-              "Use /api/posts/:postId/comments/:commentId for updating comments"
-            );
+            .send({
+              msg: "Use /api/posts/:postId/comments/:commentId for updating comments",
+            });
         } else {
           req.post = post;
           next();
@@ -22,15 +22,15 @@ module.exports = async (req, res, next) => {
       if (req.body.comments) {
         return res
           .status(400)
-          .send(
-            "Use /api/posts/:postId/comments/:commentId for updating comments"
-          );
+          .send({
+            msg: "Use /api/posts/:postId/comments/:commentId for updating comments",
+          });
       } else {
         next();
       }
     }
   } catch (err) {
     console.log(err);
-    return res.status(400).send('Something went wrong with database!');
+    return res.status(400).send("Something went wrong with database!");
   }
 };

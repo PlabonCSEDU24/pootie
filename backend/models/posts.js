@@ -1,9 +1,7 @@
 const { Schema, model } = require("mongoose");
 
 const commentSchema = Schema({
-  userId: { type: Schema.Types.ObjectId, required: true },
-  postId: { type: Schema.Types.ObjectId, required: true },
-  name: { type: String },
+  userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   comment: { type: String, required: true },
   time: { type: Date, default: Date.now() },
 });
@@ -19,6 +17,11 @@ const postSchema = Schema({
     required: true,
     maxlength: 255,
   },
+  author: {
+    type: String,
+    required: false,
+    maxlength: 255,
+  },
   categories: [{ type: String }],
   description: {
     type: String,
@@ -31,10 +34,10 @@ const postSchema = Schema({
     },
     phone: { type: String, maxlength: 20 },
     email: { type: String, maxlength: 255 },
+    geoInfo: { type: String },
   },
   price: {
-    currency: { type: String },
-    amount: { type: Number },
+    amount: { type: Number, max: 1000000000 },
   },
   photos: [
     {
@@ -43,5 +46,12 @@ const postSchema = Schema({
   ],
   comments: [commentSchema],
 });
+postSchema.index({
+  categories: "text",
+  bookName: "text",
+  description: "text",
+});
 
-module.exports.Post = model("Post", postSchema);
+Post = model("Post", postSchema);
+Post.createIndexes();
+module.exports.Post = Post;
