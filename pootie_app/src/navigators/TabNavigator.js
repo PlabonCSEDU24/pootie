@@ -1,15 +1,15 @@
 import React, { useRef } from "react";
-import { Animated, Dimensions, StyleSheet } from "react-native";
+import { Animated, StyleSheet } from "react-native";
 import "react-native-gesture-handler";
 import Home from "../screens/tabs/Home";
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign } from "@expo/vector-icons";
-import Login from "../screens/auth/Login";
 import TabBarCustomButton from "../components/TabBarCustomButton";
 import { COLORS, SIZES } from "../constants";
 import HomeStack from "./HomeStack";
 import Profile from "../screens/tabs/Profile";
+import PostStack from "./PostStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -80,7 +80,7 @@ export default function TabNavigator() {
 
         <Tab.Screen
           name={"ActionButton"}
-          component={Login}
+          component={PostStack}
           options={{
             tabBarIcon: ({ focused }) => (
               <MaterialIcons name="post-add" size={24} color={COLORS.white} />
