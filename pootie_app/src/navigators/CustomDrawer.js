@@ -32,6 +32,7 @@ export default (props) => {
       {
         text: "yes",
         onPress: () => {
+          props.logout();
           props.navigation.navigate("Home");
         },
       },
@@ -76,15 +77,17 @@ export default (props) => {
         </View>
       </DrawerContentScrollView>
 
-      <DrawerItem
-        onPress={Logout}
-        label={() => (
-          <View style={styles.logout}>
-            <AntDesign name="logout" size={24} color="black" />
-            <Text style={styles.logoutText}>Log Out</Text>
-          </View>
-        )}
-      />
+      {props.isLoggedIn && (
+        <DrawerItem
+          onPress={Logout}
+          label={() => (
+            <View style={styles.logout}>
+              <AntDesign name="logout" size={24} color="black" />
+              <Text style={styles.logoutText}>Log Out</Text>
+            </View>
+          )}
+        />
+      )}
     </View>
   );
 };

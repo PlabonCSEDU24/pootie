@@ -1,17 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import { COLORS } from "../../constants";
-
+import Context from "../../context/Context";
 const Profile = ({ navigation }) => {
+  const { isLoggedIn, user } = useContext(Context);
   return (
     <View style={styles.container}>
-      <Text>profile screen</Text>
-      <Button
-        title={"authenticate"}
-        onPress={() => {
-          navigation.navigate("Auth");
-        }}
-      />
+      <Text>{user.name}</Text>
+      <Text>{user.email}</Text>
+      {!isLoggedIn && (
+        <Button
+          title={"authenticate"}
+          onPress={() => {
+            navigation.navigate("Auth");
+          }}
+        />
+      )}
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import { COLORS } from "../../constants";
 import Categories from "../../sections/Categories";

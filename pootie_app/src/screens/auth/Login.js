@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { BACKEND_URL } from "../../constants/config";
+import Context from "../../context/Context";
 import {
   View,
   Text,
@@ -14,11 +15,31 @@ import FilledButton from "../../components/FilledButton";
 import Input from "../../components/Input";
 import LogoHeader from "../../components/LogoHeader";
 import { COLORS, FONTS, SIZES } from "../../constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login({ navigation }) {
+  const { login, setUser } = useContext(Context);
   const { isLoading, error, sendRequest } = useHttpClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const storeToken = async (value) => {
+    try {
+      await AsyncStorage.setItem("auth_token", value);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const storeUser = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem("auth_user", jsonValue);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const sendLoginRequest = async () => {
     try {
       const responseData = await sendRequest(
@@ -33,7 +54,11 @@ export default function Login({ navigation }) {
         }
       );
       if (responseData) {
-        //setUser(responseData.user);
+        setUser(responseData.user);
+        storeToken(responseData.token);
+        storeUser(responseData.user);
+        login();
+        navigation.navigate("HomeTab");
       }
       console.log(responseData);
     } catch (err) {
