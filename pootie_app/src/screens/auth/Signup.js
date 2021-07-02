@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import { BACKEND_URL } from "../../constants/config";
+import { useHttpClient } from "../../uitls/http-hook";
 import {
   View,
   Text,
@@ -13,8 +15,67 @@ import FilledButton from "../../components/FilledButton";
 import Input from "../../components/Input";
 import LogoHeader from "../../components/LogoHeader";
 import { COLORS, FONTS, images, SIZES } from "../../constants";
+import Context from "../../context/Context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Signup({ navigation }) {
+  const { login, setUser } = useContext(Context);
+  //hooks
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [contact, setContact] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+
+  const { isLoading, error, sendRequest } = useHttpClient();
+  const storeToken = async (value) => {
+    try {
+      await AsyncStorage.setItem("auth_token", value);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const storeUser = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem("auth_user", jsonValue);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const sendSignupRequest = async () => {
+    try {
+      const responseData = await sendRequest(
+        BACKEND_URL + "/api/users/signup",
+        "POST",
+        JSON.stringify({
+          email: email,
+          password: password,
+          name: name,
+          contact_no: contact,
+        }),
+        {
+          "Content-Type": "application/json",
+        }
+      );
+      if (responseData) {
+        setUser(responseData.user);
+        storeToken(responseData.token);
+        storeUser(responseData.user);
+        login();
+        navigation.navigate("HomeTab");
+      }
+      console.log(responseData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const handleSignup = () => {
+    Keyboard.dismiss();
+    sendSignupRequest();
+  };
   return (
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -26,33 +87,49 @@ export default function Signup({ navigation }) {
             showsVerticalScrollIndicator={false}
           >
             <Input
+              value={email}
+              onChangeText={(text) => setEmail(text)}
               style={styles.input}
               placeholder={"Email"}
               keyboardType={"email-address"}
+              autoCapitalize="none"
             />
-            <Input style={styles.input} placeholder={"Full Name"} />
             <Input
+              style={styles.input}
+              placeholder={"Full Name"}
+              value={name}
+              onChangeText={(text) => setName(text)}
+            />
+            <Input
+              value={contact}
+              onChangeText={(text) => setContact(text)}
               style={styles.input}
               placeholder={"Contact No"}
               keyboardType={"phone-pad"}
             />
 
             <Input
+              value={password}
+              onChangeText={(text) => setPassword(text)}
               style={styles.input}
-              placeholder={"Password"}
+              placeholder={"New Password"}
               secureTextEntry
             />
 
             <Input
+              value={confirmPass}
+              onChangeText={(text) => setConfirmPass(text)}
               style={styles.input}
               placeholder={"Confirm Password"}
               secureTextEntry
             />
           </ScrollView>
+          <Text style={styles.errorText}>{error}</Text>
           <FilledButton
             title={"Sign Up"}
+            loading={isLoading}
             style={styles.button}
-            onPress={Keyboard.dismiss}
+            onPress={handleSignup}
           />
 
           <View style={styles.signupTextContainer}>
@@ -106,5 +183,8 @@ const styles = StyleSheet.create({
   signupTextLink: {
     color: COLORS.links,
     paddingLeft: 4,
+  },
+  errorText: {
+    color: COLORS.links,
   },
 });

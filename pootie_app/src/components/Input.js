@@ -3,7 +3,14 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 import { COLORS, SIZES } from "../constants";
 
 const Input = ({ style, ...props }) => {
-  return <TextInput {...props} style={[styles.textInput, style]} />;
+  return (
+    <TextInput
+      {...props}
+      style={[styles.textInput, style]}
+      selectionColor={COLORS.primary}
+      placeholderTextColor={COLORS.lightGray4}
+    />
+  );
 };
 
 export default Input;
