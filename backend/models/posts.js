@@ -41,7 +41,8 @@ const postSchema = Schema({
   },
   photos: [
     {
-      type: String,
+      fileName: { type: String },
+      path: { type: String },
     },
   ],
   comments: [commentSchema],
@@ -52,6 +53,6 @@ postSchema.index({
   description: "text",
 });
 
-Post = model("Post", postSchema);
+const Post = model("Post", postSchema);
 Post.createIndexes();
 module.exports.Post = Post;

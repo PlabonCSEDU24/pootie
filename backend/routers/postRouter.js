@@ -4,30 +4,32 @@ const authorize = require("../middlewares/authorize");
 const postAuthorize = require("../middlewares/postAuthorize");
 const commentAuthorize = require("../middlewares/commentAuthorize");
 const { Post } = require("../models/posts");
-const postImageRouter = require("./postImageRouter");
-const postCategoryRouter = require("./postCategoryRouter");
 const postController = require("../controllers/posts/basic");
 const commentController = require("../controllers/posts/comments");
+const photosController = require("../controllers/posts/photos");
 const userSpecificController = require("../controllers/posts/user_specific");
 const { postPhotosUpload } = require("../middlewares/fileSaver");
-const photosController = require("../controllers/posts/photos");
-
 
 
 router
   .route("/")
   .get(postController.handleGetPosts)
   .post([authorize, postPhotosUpload], postController.createNewPost);
-// router.route("/categories/:categoryName").get(authorize, getAllPostsOfCategory);
 
 router
   .route("/:postId")
-  .get(authorize, postController.getPostById)
+  .get(postController.getPostById)
   .put([authorize, postAuthorize], postController.updatePostById)
   .delete([authorize, postAuthorize], postController.deletePostById);
 
-// router.use("/:postId/photos", authorize, postAuthorize, postImageRouter);
-// router.use("/:postId/categories", authorize, postAuthorize, postCategoryRouter);
+router
+  .route("/:postId/photos/")
+  .get(photosController.getPhotos)
+  .post(
+    [authorize, postAuthorize, postPhotosUpload],
+    photosController.saveManyPhotos
+  )
+  .put([authorize, postAuthorize], photosController.deleteManyPhotos);
 
 router
   .route("/:postId/comments")
@@ -44,6 +46,6 @@ router
 
 router
   .route("/user/:userId")
-  .get(authorize, userSpecificController.getUserSpecificPosts);
+  .get(userSpecificController.getUserSpecificPosts);
 
 module.exports = router;

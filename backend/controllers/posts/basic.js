@@ -23,7 +23,7 @@ const createNewPost = async (req, res) => {
     if (req.files?.length) {
       const photos = [];
       for (file of req.files) {
-        photos.push(file.path);
+        photos.push({ fileName: file.filename, path: file.path, url: file.filename });
       }
       post.photos = photos;
     }
@@ -130,7 +130,6 @@ const deletePostById = async (req, res) => {
     return res.status(400).send(defaultErrorMsg(err));
   }
 };
-
 
 module.exports = {
   createNewPost,

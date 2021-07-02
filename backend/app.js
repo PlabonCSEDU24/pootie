@@ -13,11 +13,9 @@ const dbAddress = config.get("MONGODB_SERVER");
 
 const app = express();
 
-// app.use(express.urlencoded({ extended: true }));
-// app.use(compression());
-// app.use(cors());
-// app.use(express.json());
-// app.use(morgan("dev"));
+
+app.use(compression());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(express.json());
