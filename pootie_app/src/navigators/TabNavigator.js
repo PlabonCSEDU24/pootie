@@ -56,7 +56,7 @@ export default function TabNavigator() {
 
         <Tab.Screen
           name={"Nearby"}
-          component={Home}
+          component={Profile}
           options={{
             tabBarIcon: ({ focused }) => (
               <AntDesign
