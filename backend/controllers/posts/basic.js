@@ -23,7 +23,11 @@ const createNewPost = async (req, res) => {
     if (req.files?.length) {
       const photos = [];
       for (file of req.files) {
-        photos.push({ fileName: file.filename, path: file.path, url: file.filename });
+        photos.push({
+          fileName: file.filename,
+          path: file.path,
+          url: file.filename,
+        });
       }
       post.photos = photos;
     }
@@ -123,7 +127,9 @@ const updatePostById = async (req, res) => {
 
 const deletePostById = async (req, res) => {
   try {
+    console.log('haha');
     const data = await Post.findByIdAndDelete(req.params.postId);
+    console.log(data);
     if (data) res.send(data);
     else throw new Error("This post doesn't exists");
   } catch (error) {

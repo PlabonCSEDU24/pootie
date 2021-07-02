@@ -19,8 +19,9 @@ const unlinkFiles = async (paths) => {
 const getPhotos = async (req, res) => {
   const postId = req.params.postId;
   try {
-    const { photos } = await Post.findById(postId, { photos: 1, _id: 0 });
-    return res.status(200).send(photos);
+    const post = await Post.findById(postId, { photos: 1, _id: 0 });
+    if (post) return res.status(200).send(post.photos);
+    else throw Error("Post does not exist");
   } catch (err) {
     return res.status(200).send(defaultErrorMsg(err));
   }
@@ -41,9 +42,10 @@ const saveManyPhotos = async (req, res) => {
         path: file.path,
       });
     }
-    await Post.findByIdAndUpdate(postId, {
+    const post = await Post.findByIdAndUpdate(postId, {
       $push: { photos: { $each: newPhotos } },
     });
+    console.log(post);
     return res.status(200).send({ msg: "Successfully saved photos" });
   } catch (err) {
     return res.status(400).send(defaultErrorMsg(err));
@@ -52,7 +54,7 @@ const saveManyPhotos = async (req, res) => {
 
 /**
  * { postId } = req.params
- * { paths } = req.body
+ * { fileNames } = req.body
  *
  */
 const deleteManyPhotos = async (req, res) => {

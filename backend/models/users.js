@@ -29,7 +29,6 @@ const userSchema = Schema({
   profilePhoto: {
     path: { type: String },
     fileName: { type: String },
-    fileNameWithoutExt: { type: String },
   },
 });
 

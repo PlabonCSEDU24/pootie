@@ -16,6 +16,8 @@ router
   .get(postController.handleGetPosts)
   .post([authorize, postPhotosUpload], postController.createNewPost);
 
+router.route("/user/:userId").get(userSpecificController.getUserSpecificPosts);
+
 router
   .route("/:postId")
   .get(postController.getPostById)
@@ -43,9 +45,5 @@ router
     [authorize, commentAuthorize],
     commentController.deleteCommentFromPost
   );
-
-router
-  .route("/user/:userId")
-  .get(userSpecificController.getUserSpecificPosts);
 
 module.exports = router;

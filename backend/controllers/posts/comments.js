@@ -43,8 +43,7 @@ const addCommentToPost = async (req, res) => {
       },
       { new: true }
     );
-    console.log(updatedPost);
-    return res.status(201).send(comment);
+    return res.status(201).send(updatedPost);
   } catch (err) {
     // console.log(err);
     return res.status(400).send(defaultErrorMsg(err));

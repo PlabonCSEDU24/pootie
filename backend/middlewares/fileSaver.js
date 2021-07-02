@@ -32,7 +32,7 @@ module.exports.postPhotosUpload = multer({
   },
 }).array("photos");
 
-module.exports.profilePhotoupload = multer({
+module.exports.profilePhotoUpload = multer({
   storage: imageStorage,
   limits: { fileSize: 1024 * 1024 * 3 },
   fileFilter: (req, file, cb) => {

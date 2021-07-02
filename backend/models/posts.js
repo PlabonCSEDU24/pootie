@@ -37,7 +37,8 @@ const postSchema = Schema({
     geoInfo: { type: String },
   },
   price: {
-    amount: { type: Number, max: 1000000000 },
+    type: Number,
+    max: 1000000000,
   },
   photos: [
     {
