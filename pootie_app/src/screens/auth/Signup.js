@@ -19,7 +19,7 @@ import Context from "../../context/Context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Signup({ navigation }) {
-  const { login, setUser } = useContext(Context);
+  const { login, setUser, setAuthToken } = useContext(Context);
   //hooks
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,6 +62,7 @@ export default function Signup({ navigation }) {
       );
       if (responseData) {
         setUser(responseData.user);
+        setAuthToken(responseData.setAuthToken);
         storeToken(responseData.token);
         storeUser(responseData.user);
         login();

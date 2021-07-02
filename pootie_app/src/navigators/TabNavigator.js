@@ -155,8 +155,7 @@ export default function TabNavigator() {
           backgroundColor: COLORS.primary,
           position: "absolute",
           bottom: 79,
-          // Horizontal Padding = 20...
-          left: 50,
+          left: 38,
           borderRadius: 20,
           transform: [{ translateX: tabOffsetValue }],
         }}
@@ -167,10 +166,7 @@ export default function TabNavigator() {
 
 function getWidth() {
   let width = SIZES.width;
-
-  // Horizontal Padding = 20...
-  width = width - 80;
-
+  width = width - 56;
   // Total five Tabs...
   return width / 5;
 }
@@ -179,10 +175,10 @@ const styles = StyleSheet.create({
   tab: {
     backgroundColor: "white",
     bottom: 20,
-    marginHorizontal: SIZES.padding,
+    marginHorizontal: 10,
     height: 60,
     borderRadius: 10,
     position: "absolute",
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
 });

@@ -17,7 +17,7 @@ import { COLORS, FONTS, SIZES } from "../../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login({ navigation }) {
-  const { login, setUser } = useContext(Context);
+  const { login, setUser, setAuthToken } = useContext(Context);
   //hooks
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -57,6 +57,7 @@ export default function Login({ navigation }) {
         setUser(responseData.user);
         storeToken(responseData.token);
         storeUser(responseData.user);
+        setAuthToken(responseData.token);
         login();
         navigation.navigate("HomeTab");
       }

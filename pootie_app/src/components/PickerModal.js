@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect } from "react";
+import React from "react";
 import { Modal, StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { COLORS, DRAWABLES, FONTS } from "../constants";
+import { COLORS, FONTS } from "../constants";
 
 const PickerModal = ({
   showModal,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   closeBtn: {
-    backgroundColor: COLORS.lightGray2,
+    backgroundColor: COLORS.lightGray3,
     width: 60,
     height: 10,
     borderRadius: 20,

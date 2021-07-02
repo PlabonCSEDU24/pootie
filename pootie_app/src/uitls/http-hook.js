@@ -1,5 +1,7 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, useContext } from "react";
+import Context from "../context/Context";
 export const useHttpClient = () => {
+  const { authToken } = useContext(Context);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
   const activeHttpRequests = useRef([]);
@@ -15,6 +17,7 @@ export const useHttpClient = () => {
           body,
           headers: {
             ...headers,
+            Authorization: `Bearer ${authToken}`,
           },
           mode: "cors",
           signal: httpAbortCtrl.signal,

@@ -55,6 +55,7 @@ const GlobalState = ({ children }) => {
         login: login,
         logout: logout,
         setUser: setUser,
+        setAuthToken: setAuthToken,
       }}
     >
       {children}

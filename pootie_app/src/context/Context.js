@@ -6,4 +6,5 @@ export default Context = createContext({
   login: () => {},
   logout: () => {},
   setUser: () => {},
+  setAuthToken: () => {},
 });
