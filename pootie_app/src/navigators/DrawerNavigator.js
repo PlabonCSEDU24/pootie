@@ -61,7 +61,7 @@ const DrawerNavigator = () => {
             drawerIcon: ({ focused }) => (
               <AntDesign
                 name={icon}
-                size={23}
+                size={24}
                 color={focused ? COLORS.primary : COLORS.lightGray4}
               />
             ),

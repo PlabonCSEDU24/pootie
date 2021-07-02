@@ -4,7 +4,6 @@ import Context from "../../context/Context";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   TouchableWithoutFeedback,
   Keyboard,
@@ -19,9 +18,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login({ navigation }) {
   const { login, setUser } = useContext(Context);
-  const { isLoading, error, sendRequest } = useHttpClient();
+  //hooks
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { isLoading, error, sendRequest } = useHttpClient();
 
   const storeToken = async (value) => {
     try {
@@ -66,6 +66,7 @@ export default function Login({ navigation }) {
     }
   };
   const handleLogin = () => {
+    Keyboard.dismiss();
     sendLoginRequest();
   };
   return (

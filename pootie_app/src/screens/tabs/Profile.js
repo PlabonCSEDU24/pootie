@@ -3,19 +3,12 @@ import { View, Text, Button, StyleSheet } from "react-native";
 import { COLORS } from "../../constants";
 import Context from "../../context/Context";
 const Profile = ({ navigation }) => {
-  const { isLoggedIn, user } = useContext(Context);
+  const { user } = useContext(Context);
   return (
     <View style={styles.container}>
       <Text>{user.name}</Text>
       <Text>{user.email}</Text>
-      {!isLoggedIn && (
-        <Button
-          title={"authenticate"}
-          onPress={() => {
-            navigation.navigate("Auth");
-          }}
-        />
-      )}
+      <Text>{user.contact_no}</Text>
     </View>
   );
 };

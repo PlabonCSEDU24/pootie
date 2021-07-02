@@ -76,7 +76,11 @@ export const FONTS = {
   body4: {
     fontFamily: "Roboto-Regular",
     fontSize: SIZES.body4,
-    lineHeight: 22,
+  },
+  body2_bangla: {
+    fontFamily: "HindSiliguri-Regular",
+    fontSize: 18,
+    color: COLORS.gray,
   },
   body3_bangla: {
     fontFamily: "HindSiliguri-Regular",
