@@ -11,6 +11,7 @@ import { COLORS, SIZES } from "../constants";
 import HomeStack from "./HomeStack";
 import Profile from "../screens/tabs/Profile";
 import CreatePost from "../screens/tabs/CreatePost";
+import PostDetail from "../screens/nested/PostDetail";
 
 const Tab = createBottomTabNavigator();
 
@@ -53,8 +54,8 @@ export default function TabNavigator() {
         ></Tab.Screen>
 
         <Tab.Screen
-          name={"Nearby"}
-          component={Home}
+          name={"Post Details"}
+          component={PostDetail}
           options={{
             tabBarIcon: ({ focused }) => (
               <AntDesign

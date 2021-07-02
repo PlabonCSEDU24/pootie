@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
 import Header from '../../components/Header';
 import { COLORS } from "../../constants";
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import Input from '../../components/Input';
 
 const CreatePost = ({ navigation }) => {
     const [bookName, setBookName] = useState('');
@@ -63,12 +65,11 @@ const CreatePost = ({ navigation }) => {
                 Keyboard.dismiss();
             }}>
             <View style={styles.container}>
-                <Header title="Create A Post" />
-                <View style={styles.text}>
-                    <Text>Book Name</Text>
-                </View>
-                <TextInput
+                <Header title="Create New Post" />
+
+                <Input
                     style={styles.input}
+                    placeholder="Bookname"
                     autoCapitalize='words'
                     autoCorrect={false}
                     keyboardType='default'
@@ -77,12 +78,9 @@ const CreatePost = ({ navigation }) => {
                     value={bookName}
                 />
 
-                <View style={styles.text}>
-                    <Text>Price(in BDT)</Text>
-                </View>
-
-                <TextInput
+                <Input
                     style={styles.input}
+                    placeholder="Price(in BDT)"
                     keyboardType='number-pad'
                     maxLength={10}
                     autoCorrect={false}
@@ -91,10 +89,8 @@ const CreatePost = ({ navigation }) => {
                     value={price}
                 />
 
-                <View style={styles.text}>
-                    <Text>Details</Text>
-                </View>
-                <TextInput style={styles.multilineInput}
+                <Input style={styles.multilineInput}
+                    placeholder="Details"
                     multiline={true}
                     numberOfLines={4}
                     maxLength={1000}
@@ -108,28 +104,43 @@ const CreatePost = ({ navigation }) => {
                 <TouchableOpacity style={styles.icon}
                     onPress={() => { console.log("image uploaded") }}
                 >
-                    <Text>Upload Icon</Text>
+                    <AntDesign
+                        name="upload"
+                        size={36}
+                        color="black" />
                 </TouchableOpacity>
-
-                <View style={styles.text}>
-                    <Text>Location</Text>
-                </View>
-
+                <TouchableOpacity
+                    style={styles.icon}
+                    onPress={() => { console.log("Location Pinned") }}>
+                    <View
+                        flexDirection='row'
+                        marginTop={20}
+                    >
+                        <MaterialIcons
+                            name="location-pin"
+                            size={24}
+                            color="black" />
+                        <Text style={styles.locationText}>Current Location</Text>
+                    </View>
+                </TouchableOpacity>
                 <View style={styles.buttonContainer}>
-                    <Button
-                        title="Post"
+                    <TouchableOpacity
+                        style={styles.postButton}
                         onPress={onPostHandler}
-                    />
-
-                    <Button
-                        title="Clear"
-                        color='red'
+                        TouchableOpacity={0.8}>
+                        <Text style={styles.buttonText}>Post</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.clearButton}
                         onPress={onResetHandler}
-                    />
+                        TouchableOpacity={0.8}>
+                        <Text style={styles.buttonText}>Clear</Text>
+
+                    </TouchableOpacity>
                 </View>
 
             </View>
-        </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback >
     );
 
 };
@@ -142,31 +153,62 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 10,
         fontWeight: 'bold',
-        margin: 10,
+        marginLeft: 10,
+        marginTop: 25,
     },
     input: {
+        backgroundColor: COLORS.lightGray2,
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 10,
         height: 40,
-        maxWidth: '80%',
-        margin: 10,
+        maxWidth: '90%',
+        marginLeft: 10,
+        marginTop: 5,
     },
     multilineInput: {
+        backgroundColor: COLORS.lightGray2,
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 2,
         height: 80,
-        maxWidth: '80%',
+        maxWidth: '90%',
         textAlignVertical: 'top',
-        margin: 10,
+        marginLeft: 10,
+        marginTop: 5,
     },
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         marginTop: 20,
         alignItems: 'flex-end',
-    }
+    },
+    icon: {
+        margin: 10,
+    },
+    postButton: {
+        alignItems: 'center',
+        borderRadius: 10,
+        backgroundColor: COLORS.primary,
+        width: '20%',
+        padding: 5,
+    },
+    clearButton: {
+        alignItems: 'center',
+        borderRadius: 10,
+        backgroundColor: 'orangered',
+        width: '20%',
+        padding: 5,
+    },
+    buttonText: {
+        fontSize: 20,
+        color: COLORS.white,
+    },
+    locationText: {
+        fontSize: 16,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
 });
 
 export default CreatePost;
