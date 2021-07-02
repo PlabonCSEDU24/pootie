@@ -12,6 +12,7 @@ import Profile from "../screens/tabs/Profile";
 import Context from "../context/Context";
 import AuthStack from "./AuthStack";
 import PostStack from "./postStack";
+import PostDetail from "../screens/nested/PostDetail";
 
 const Tab = createBottomTabNavigator();
 
@@ -55,7 +56,7 @@ export default function TabNavigator() {
         ></Tab.Screen>
 
         <Tab.Screen
-          name={"Post Details"}
+          name={"Nearby"}
           component={PostDetail}
           options={{
             tabBarIcon: ({ focused }) => (

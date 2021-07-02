@@ -8,12 +8,13 @@ import {
   Platform,
   Linking,
   FlatList,
-  TextInput
 } from "react-native";
 import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
 import Header from "../../components/Header";
-import { COLORS, FONTS } from "../../constants";
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { COLORS } from "../../constants";
+import { Feather, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
+import Input from "../../components/Input";
+import { TextInput } from "react-native-gesture-handler";
 
 const ImageSlides = [
   {
@@ -38,7 +39,7 @@ const Comments = [
   {
     id: '1',
     username: 'Plabon',
-    comment: 'Nice book'
+    comment: 'Nice book,fngfkdghndghfdghbdfikgfdiughdiughdiughdigduidikgdi'
   },
   {
     id: '2',
@@ -85,6 +86,56 @@ const Comments = [
     username: 'Yo',
     comment: 'I want it'
   },
+  {
+    id: '11',
+    username: 'Plabon',
+    comment: 'Nice book'
+  },
+  {
+    id: '12',
+    username: 'Yo',
+    comment: 'I want it'
+  },
+  {
+    id: '13',
+    username: 'Plabon',
+    comment: 'Nice book'
+  },
+  {
+    id: '14',
+    username: 'Yo',
+    comment: 'I want it'
+  },
+  {
+    id: '15',
+    username: 'Yo',
+    comment: 'I want it'
+  },
+  {
+    id: '16',
+    username: 'Plabon',
+    comment: 'Nice book'
+  },
+  {
+    id: '17',
+    username: 'Yo',
+    comment: 'I want it'
+  },
+  {
+    id: '18',
+    username: 'Plabon',
+    comment: 'Nice book'
+  },
+  {
+    id: '19',
+    username: 'Yo',
+    comment: 'I want it'
+  },
+  {
+    id: '20',
+    username: 'Yo',
+    comment: 'I want it'
+  },
 ];
 const PostDetail = props => {
 
@@ -120,16 +171,18 @@ const PostDetail = props => {
     );
   };
 
-  const renderCommentItem = ({ item }) => {
-    return (
-      <Item
-        item={item}
-        onPress={() => setSelectedId(item.id)}
-        backgroundColor={{ backgroundColor }}
-        textColor={{ color }}
-      />
-    );
-  };
+  const renderComment = ({ item }) => (
+    <View
+      style={styles.commentList}
+      key={item.id}>
+      <FontAwesome5 name="user-circle" size={24} color='black' />
+      <View style={{ marginLeft: 10 }}>
+        <Text style={styles.commentUser} >{item.username}</Text>
+        <Text style={{ marginRight: 20 }}>{item.comment}</Text>
+      </View>
+    </View>
+  );
+
 
   return (
     <View style={styles.container}>
@@ -154,22 +207,21 @@ const PostDetail = props => {
         </Text>
       </View>
 
-      <View height='30%'>
+      <View style={styles.margin} height='30%'>
         <Text style={styles.textComment} >Comments</Text>
-        {/*<FlatList
+        <FlatList
           data={Comments}
-          renderItem={renderCommentItem}
-          keyExtractor={(item) => item.id}
-          extraData={selectedId}
-        />*/}
+          renderItem={renderComment}
+        />
       </View>
       <View style={styles.commentContainer}>
-        <TextInput placeholder="add a comment"></TextInput>
+        <TextInput placeholder="add a comment">
+        </TextInput>
         <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => { console.log("comment posted") }}
+          TouchableOpacity={0.6}
+          onPress={() => { console.log("posted") }}
         >
-          <MaterialCommunityIcons name="send-circle-outline" size={24} color="black" />
+          <MaterialCommunityIcons name="send" size={24} color="black" />
         </TouchableOpacity>
       </View>
 
@@ -240,11 +292,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     marginLeft: 30,
-    marginTop: 10,
+    marginTop: 5,
   },
   textComment: {
-    marginTop: 5,
-    marginLeft: 30,
     fontSize: 18,
     fontWeight: "bold",
   },
@@ -252,9 +302,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 30,
     marginRight: 10,
+    marginTop: 10,
     borderColor: 'black',
     borderBottomWidth: 1,
     justifyContent: 'space-between',
+  },
+  commentUser: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  commentList: {
+    flexDirection: 'row',
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginRight: 10,
   }
 });
 
