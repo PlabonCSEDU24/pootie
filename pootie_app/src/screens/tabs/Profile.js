@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
-import { COLORS } from "../../constants";
+import { COLORS, SIZES, FONTS } from "../../constants";
 import Context from "../../context/Context";
+
 const Profile = ({ navigation }) => {
   const { user } = useContext(Context);
   return (
