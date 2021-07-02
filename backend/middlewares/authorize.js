@@ -1,8 +1,10 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const JWT_SECRET = config.get("JWT_SECRET");
+const { User } = require("../models/users");
+const _ = require("lodash");
 
-module.exports = function authorize(req, res, next) {
+module.exports = async function authorize(req, res, next) {
   const token = req.header("Authorization");
   if (!token)
     return res.status(401).send({ msg: "Access denied! No token found" });
@@ -12,9 +14,12 @@ module.exports = function authorize(req, res, next) {
       token.split(" ")[1].trim(),
       process.env.JWT_SECRET || JWT_SECRET
     );
-    req.user = decoded;
+    const user = await User.findById(decoded._id);
+    if (user) {
+      req.user = _.pick(user, ["name", "email", "contact_no", "_id"]);
+      next();
+    } else throw new Error("This user does not exist!");
     // TODO: cross check in the database with the userid
-    next();
   } catch (err) {
     return res
       .status(400)

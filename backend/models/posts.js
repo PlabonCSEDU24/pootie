@@ -22,7 +22,7 @@ const postSchema = Schema({
     required: false,
     maxlength: 255,
   },
-  categories: [{ type: String }],
+  category: { type: String },
   description: {
     type: String,
     maxlength: 1000,
@@ -33,8 +33,7 @@ const postSchema = Schema({
       maxlength: 1000,
     },
     phone: { type: String, maxlength: 20 },
-    email: { type: String, maxlength: 255 },
-    geoInfo: { type: String },
+    geoCode: { latitude: { type: String }, longitude: { type: String } },
   },
   price: {
     type: Number,

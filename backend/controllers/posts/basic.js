@@ -9,28 +9,26 @@ const inf = Number.MAX_SAFE_INTEGER;
 
 // this will require authorize and filesave middleware first
 const createNewPost = async (req, res) => {
-  const body = { ...req.body };
+  const postInfo = { ...req.body };
   const userId = req.user._id;
-  body.contactInfo = JSON.parse(body.contactInfo);
-  body.categories = JSON.parse(body.categories);
-  // console.log(body);
-  // res.send(body);
+  postInfo.contactInfo = JSON.parse(postInfo.contactInfo);
   try {
     const post = new Post({
-      ...body,
+      ...postInfo,
       userId: userId,
     });
+    // console.log(req.files);
     if (req.files?.length) {
       const photos = [];
       for (file of req.files) {
         photos.push({
           fileName: file.filename,
           path: file.path,
-          url: file.filename,
         });
       }
       post.photos = photos;
     }
+    if (!post.contactInfo.phone) post.contactInfo.phone = req.user.contact_no;
 
     const ret = await post.save();
     return res.status(201).send(ret);
@@ -127,7 +125,7 @@ const updatePostById = async (req, res) => {
 
 const deletePostById = async (req, res) => {
   try {
-    console.log('haha');
+    console.log("haha");
     const data = await Post.findByIdAndDelete(req.params.postId);
     console.log(data);
     if (data) res.send(data);
