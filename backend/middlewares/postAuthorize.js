@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
     if (postId) {
       const post = await Post.findById(postId);
       if (post) {
-        if (post.userId == userId) {
+        if (post.userId.toString() === userId.toString()) {
           next();
         } else {
           throw new Error("You can only edit your posts!");

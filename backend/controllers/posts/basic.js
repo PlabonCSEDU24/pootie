@@ -1,4 +1,5 @@
 const { Post } = require("../../models/posts");
+const fs = require("fs-extra");
 
 const defaultErrorMsg = (err) => {
   return {
@@ -11,7 +12,9 @@ const inf = Number.MAX_SAFE_INTEGER;
 const createNewPost = async (req, res) => {
   const postInfo = { ...req.body };
   const userId = req.user._id;
-  postInfo.contactInfo = JSON.parse(postInfo.contactInfo);
+  if (postInfo.contactInfo) {
+    postInfo.contactInfo = JSON.parse(postInfo.contactInfo);
+  }
   try {
     const post = new Post({
       ...postInfo,
@@ -145,26 +148,44 @@ const updatePostById = async (req, res) => {
       throw new Error(
         "comment editing not allowed through this route, use posts/comments[/:commentId] for editing comments"
       );
-    if (req.body.photos)
-      throw new Error(
-        "Photos editing is not allowed through this route use posts/photos"
-      );
 
-    const data = await Post.findByIdAndUpdate(req.params.postId, req.body, {
+    const postInfo = { ...req.body };
+    if (postInfo.contactInfo)
+      postInfo.contactInfo = JSON.parse(postInfo.contactInfo);
+    if (req.files?.length) {
+      const originalPost = await Post.findById(req.params.postId);
+      const delPicsPaths = originalPost.photos;
+      // console.log(delPicsPaths);
+      for ({ path } of delPicsPaths) {
+        // console.log(path);
+        await fs.unlink(path);
+      }
+      const photos = [];
+      for (file of req.files) {
+        photos.push({
+          fileName: file.filename,
+          path: file.path,
+        });
+      }
+      postInfo.photos = photos;
+      // console.log(photos);
+    }
+
+    const data = await Post.findByIdAndUpdate(req.params.postId, postInfo, {
       new: true,
     });
     return res.status(200).send(data);
-  } catch (error) {
+  } catch (err) {
+    console.log(err);
     return res.status(400).send(defaultErrorMsg(err));
   }
 };
 
 const deletePostById = async (req, res) => {
   try {
-    console.log("haha");
     const data = await Post.findByIdAndDelete(req.params.postId);
-    console.log(data);
-    if (data) res.send(data);
+    // console.log(data);
+    if (data) return res.status(200).send(data);
     else throw new Error("This post doesn't exists");
   } catch (error) {
     return res.status(400).send(defaultErrorMsg(err));

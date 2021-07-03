@@ -9,7 +9,7 @@ const postRouter = require("./routers/postRouter");
 const mongoose = require("mongoose");
 
 const PORT = config.get("DEV_BACKEND_PORT");
-const dbAddress = config.get("MONGODB_SERVER_PLABON");
+const dbAddress = config.get("MONGODB_SERVER");
 
 const app = express();
 
