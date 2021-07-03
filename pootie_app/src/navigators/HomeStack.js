@@ -19,7 +19,7 @@ const HomeStack = () => {
       />
       <Stack.Screen
         options={{ headerShown: false }}
-        name="post"
+        name="postDetail"
         component={PostDetail}
       />
     </Stack.Navigator>

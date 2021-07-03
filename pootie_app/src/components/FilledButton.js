@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     borderRadius: SIZES.radius,
   },
   text: {
+    ...FONTS.button,
     color: COLORS.white,
-    ...FONTS.body2,
   },
 });

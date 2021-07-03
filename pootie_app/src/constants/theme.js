@@ -59,9 +59,8 @@ export const FONTS = {
   h3: { fontFamily: "Roboto-Regular", fontSize: SIZES.h3, lineHeight: 22 },
   h4: { fontFamily: "Roboto-Regular", fontSize: SIZES.h4, lineHeight: 22 },
   body1: {
-    fontFamily: "Roboto-Regular",
-    fontSize: SIZES.body1,
-    lineHeight: 36,
+    fontFamily: "HindSiliguri-Regular",
+    fontSize: 26,
   },
   body2: {
     fontFamily: "Roboto-Regular",
@@ -86,6 +85,10 @@ export const FONTS = {
     fontFamily: "HindSiliguri-Regular",
     fontSize: 14,
     color: COLORS.gray,
+  },
+  button: {
+    fontFamily: "HindSiliguri-Regular",
+    fontSize: 18,
   },
 };
 

@@ -80,7 +80,7 @@ export default function Login({ navigation }) {
             value={email}
             onChangeText={(text) => setEmail(text)}
             style={styles.input}
-            placeholder={"Email"}
+            placeholder={"ইমেইল"}
             keyboardType={"email-address"}
             autoCapitalize="none"
           />
@@ -89,21 +89,23 @@ export default function Login({ navigation }) {
             value={password}
             onChangeText={(text) => setPassword(text)}
             style={styles.input}
-            placeholder={"Password"}
+            placeholder={"পাসওয়ার্ড"}
             secureTextEntry
           />
           <Text style={styles.errorText}>{error}</Text>
           <FilledButton
             loading={isLoading}
-            title={"Login"}
+            title={"লগইন"}
             style={styles.button}
             onPress={handleLogin}
           />
           <View style={styles.signupTextContainer}>
-            <Text style={styles.signupText}>{"NO PREVIOUS ACCOUNT?"}</Text>
+            <Text style={styles.signupText}>
+              {"পূর্ববর্তী কোন অ্যাকাউন্ট নেই?"}
+            </Text>
             <TouchableOpacity onPress={() => navigation.replace("signup")}>
               <Text style={[styles.signupText, styles.signupTextLink]}>
-                SIGN UP
+                {"সাইন আপ"}
               </Text>
             </TouchableOpacity>
           </View>
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   signupText: {
-    ...FONTS.body3,
+    ...FONTS.body3_bangla,
   },
   signupTextLink: {
     color: COLORS.links,

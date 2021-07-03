@@ -26,7 +26,7 @@ import { BACKEND_URL } from "../../constants/config";
 import { useHttpClient } from "../../uitls/http-hook";
 
 const CreatePost = ({ navigation }) => {
-  const { isLoggedIn, user } = useContext(Context);
+  const { isLoggedIn, user, setPosts } = useContext(Context);
   const { isLoading, error, sendRequest } = useHttpClient();
   //input states
   const [bookName, setBookName] = useState("");
@@ -98,7 +98,7 @@ const CreatePost = ({ navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.5,
     });
 
     console.log(result);
@@ -124,7 +124,7 @@ const CreatePost = ({ navigation }) => {
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
         aspect: [4, 3],
-        quality: 1,
+        quality: 0.5,
       });
       console.log(result);
 
@@ -232,6 +232,10 @@ const CreatePost = ({ navigation }) => {
       );
       console.log(responseData);
       if (responseData) {
+        setPosts((previousPosts) => {
+          let newArray = [responseData];
+          return newArray.concat(previousPosts);
+        });
         alert("You have posted successfully!");
         onResetHandler();
       }

@@ -91,13 +91,13 @@ export default function Signup({ navigation }) {
               value={email}
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
-              placeholder={"Email"}
+              placeholder={"ইমেইল"}
               keyboardType={"email-address"}
               autoCapitalize="none"
             />
             <Input
               style={styles.input}
-              placeholder={"Full Name"}
+              placeholder={"নাম"}
               value={name}
               onChangeText={(text) => setName(text)}
             />
@@ -105,7 +105,7 @@ export default function Signup({ navigation }) {
               value={contact}
               onChangeText={(text) => setContact(text)}
               style={styles.input}
-              placeholder={"Contact No"}
+              placeholder={"মোবাইল নং"}
               keyboardType={"phone-pad"}
             />
 
@@ -113,7 +113,7 @@ export default function Signup({ navigation }) {
               value={password}
               onChangeText={(text) => setPassword(text)}
               style={styles.input}
-              placeholder={"New Password"}
+              placeholder={"নতুন পাসওয়ার্ড"}
               secureTextEntry
             />
 
@@ -121,23 +121,25 @@ export default function Signup({ navigation }) {
               value={confirmPass}
               onChangeText={(text) => setConfirmPass(text)}
               style={styles.input}
-              placeholder={"Confirm Password"}
+              placeholder={"কনফার্ম পাসওয়ার্ড"}
               secureTextEntry
             />
           </ScrollView>
           <Text style={styles.errorText}>{error}</Text>
           <FilledButton
-            title={"Sign Up"}
+            title={"সাইন আপ"}
             loading={isLoading}
             style={styles.button}
             onPress={handleSignup}
           />
 
           <View style={styles.signupTextContainer}>
-            <Text style={styles.signupText}>{"ALREADY HAVE AN ACCOUNT?"}</Text>
+            <Text style={styles.signupText}>
+              {"পূর্ববর্তী অ্যাকাউন্ট রয়েছে?"}
+            </Text>
             <TouchableOpacity onPress={() => navigation.replace("login")}>
               <Text style={[styles.signupText, styles.signupTextLink]}>
-                LOGIN
+                {"লগ ইন"}
               </Text>
             </TouchableOpacity>
           </View>
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   signupText: {
-    ...FONTS.body3,
+    ...FONTS.body3_bangla,
   },
   signupTextLink: {
     color: COLORS.links,

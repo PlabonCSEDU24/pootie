@@ -154,7 +154,7 @@ export default function TabNavigator() {
           height: 2,
           backgroundColor: COLORS.primary,
           position: "absolute",
-          bottom: 79,
+          bottom: 69,
           left: 38,
           borderRadius: 20,
           transform: [{ translateX: tabOffsetValue }],
@@ -174,7 +174,7 @@ function getWidth() {
 const styles = StyleSheet.create({
   tab: {
     backgroundColor: "white",
-    bottom: 20,
+    bottom: 10,
     marginHorizontal: 10,
     height: 60,
     borderRadius: 10,
