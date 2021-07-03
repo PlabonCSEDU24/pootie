@@ -12,6 +12,7 @@ import Profile from "../screens/tabs/Profile";
 import Context from "../context/Context";
 import AuthStack from "./AuthStack";
 import PostStack from "./postStack";
+import EditProfile from "../screens/nested/EditProfile"
 
 const Tab = createBottomTabNavigator();
 
@@ -56,7 +57,7 @@ export default function TabNavigator() {
 
         <Tab.Screen
           name={"Nearby"}
-          component={Profile}
+          component={EditProfile}
           options={{
             tabBarIcon: ({ focused }) => (
               <AntDesign
