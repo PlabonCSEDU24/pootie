@@ -24,7 +24,7 @@ const imageStorage = multer.diskStorage({
 
 module.exports.postPhotosUpload = multer({
   storage: imageStorage,
-  limits: { fileSize: 1024 * 1024 * 3 },
+  limits: { fileSize: 1024 * 1024 * 10 },
   fileFilter: (req, file, cb) => {
     const isValid = !!MIME_TYPE_MAP_for_profile_pic[file.mimetype];
     if (isValid) cb(null, true);
@@ -34,7 +34,7 @@ module.exports.postPhotosUpload = multer({
 
 module.exports.profilePhotoUpload = multer({
   storage: imageStorage,
-  limits: { fileSize: 1024 * 1024 * 3 },
+  limits: { fileSize: 1024 * 1024 * 10 },
   fileFilter: (req, file, cb) => {
     const isValid = !!MIME_TYPE_MAP_for_profile_pic[file.mimetype];
     if (isValid) cb(null, true);
