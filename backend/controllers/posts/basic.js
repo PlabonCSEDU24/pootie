@@ -45,7 +45,7 @@ const handleGetPosts = async (req, res) => {
     const limit = parseInt(req.query.limit) || inf;
     const queryType = req.query.queryType || "loose"; // ['loose', 'strict']
     const orderBy = req.query.orderBy || "time"; // ['time', 'relevance']
-    
+
     let result = null;
     // query with only bookName
     const getSortParams = () => {
@@ -107,7 +107,14 @@ const handleGetPosts = async (req, res) => {
           .limit(limit);
       }
     } else {
-      result = await Post.find().sort(sortParams).skip(skip).limit(limit);
+      if (orderBy === "time") {
+        result = await Post.find()
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(limit);
+      } else {
+        result = await Post.find().skip(skip).limit(limit);
+      }
     }
     return res.status(200).send(result);
   } catch (err) {
