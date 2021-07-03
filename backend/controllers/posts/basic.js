@@ -40,45 +40,74 @@ const createNewPost = async (req, res) => {
 const handleGetPosts = async (req, res) => {
   try {
     const bookName = req.query.bookName;
-    const categories = req.query.categories;
+    const category = req.query.category;
     const skip = parseInt(req.query.skip) || 0;
     const limit = parseInt(req.query.limit) || inf;
     const queryType = req.query.queryType || "loose"; // ['loose', 'strict']
+    const orderBy = req.query.orderBy || "time"; // ['time', 'relevance']
+    
     let result = null;
     // query with only bookName
+    const getSortParams = () => {
+      if (queryType === "loose") {
+        if (orderBy === "time") {
+          return {
+            createdAt: -1,
+            score: { $meta: "textScore" },
+          };
+        } else {
+          return {
+            score: { $meta: "textScore" },
+            createdAt: -1,
+          };
+        }
+      } else {
+        if (orderBy === "time") {
+          return {
+            createdAt: -1,
+          };
+        } else {
+          return {};
+        }
+      }
+    };
+
+    const sortParams = getSortParams();
     if (bookName) {
       if (queryType === "loose") {
         result = await Post.find(
           { $text: { $search: bookName, $diacriticSensitive: true } },
           { score: { $meta: "textScore" } }
         )
-          .sort({ score: { $meta: "textScore" } })
+          .sort(sortParams)
           .skip(skip)
           .limit(limit);
       } else {
         result = await Post.find({ bookName: bookName })
+          .sort(sortParams)
           .skip(skip)
           .limit(limit);
       }
       // query with only category
-    } else if (categories) {
+    } else if (category) {
       if (queryType === "strict") {
-        result = await Post.find({ categories: { $all: categories } })
+        result = await Post.find({ category: category })
+          .sort(sortParams)
           .skip(skip)
           .limit(limit);
       } else {
         result = await Post.find(
           {
-            $text: { $search: categories.join(" "), $diacriticSensitive: true },
+            $text: { $search: category, $diacriticSensitive: true },
           },
           { score: { $meta: "textScore" } }
         )
-          .sort({ score: { $meta: "textScore" } })
+          .sort(sortParams)
           .skip(skip)
           .limit(limit);
       }
     } else {
-      result = await Post.find().skip(skip).limit(limit);
+      result = await Post.find().sort(sortParams).skip(skip).limit(limit);
     }
     return res.status(200).send(result);
   } catch (err) {

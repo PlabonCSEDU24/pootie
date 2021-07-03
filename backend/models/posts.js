@@ -46,9 +46,9 @@ const postSchema = Schema({
     },
   ],
   comments: [commentSchema],
-});
+}, { timestamps : true });
 postSchema.index({
-  categories: "text",
+  category: "text",
   bookName: "text",
   description: "text",
 });
