@@ -4,6 +4,7 @@ const { User, validate } = require("../../models/users");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const JWT_SECRET = config.get("JWT_SECRET");
+const fs = require("fs-extra");
 
 const defaultErrorMsg = (err) => {
   return {
@@ -138,10 +139,69 @@ const tokenValidation = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  try {
+    if (req.body._id) {
+      throw new Error("_id field cannot be updated!");
+    }
+    if (req.body.email) {
+      throw new Error("email field cannot be updated!");
+    }
+    const userId = req.user._id;
+    const update = { ...req.body };
+    if (req.file) {
+      if (req.user.profilePhoto.path)
+        await fs.unlink(req.user.profilePhoto.path);
+      const imagefile = req.file;
+      const profilePhoto = {
+        path: imagefile.path,
+        fileName: imagefile.filename,
+      };
+      update.profilePhoto = profilePhoto;
+    } else {
+      user.profilePhoto = {
+        path: null,
+        fileName: null,
+      };
+    }
+    if (update.password) {
+      const salt = await bcrypt.genSalt(10);
+      update.password = await bcrypt.hash(update.password, salt);
+    }
+    const updatedInfo = await User.findByIdAndUpdate(userId, update, {
+      new: true,
+    });
+    const ret = _.pick(updatedInfo, [
+      "_id",
+      "email",
+      "name",
+      "contact_no",
+      "profilePhoto",
+    ]);
+    return res.status(200).send(ret);
+  } catch (err) {
+    return res.status(400).send(defaultErrorMsg(err));
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const proPic = req.user.profilePhoto.path;
+    if (proPic) await fs.unlink(proPic);
+    const result = await User.findByIdAndDelete(req.user._id);
+    return res.status(200).send(result);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send(defaultErrorMsg(err));
+  }
+};
+
 module.exports = {
   tokenValidation,
   authUser,
   createNewUser,
   getUserInfo,
   getCurrentUser,
+  updateUser,
+  deleteUser,
 };

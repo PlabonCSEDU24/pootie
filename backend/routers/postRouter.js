@@ -10,7 +10,6 @@ const photosController = require("../controllers/posts/photos");
 const userSpecificController = require("../controllers/posts/user_specific");
 const { postPhotosUpload } = require("../middlewares/fileSaver");
 
-
 router
   .route("/")
   .get(postController.handleGetPosts)
@@ -21,7 +20,10 @@ router.route("/user/:userId").get(userSpecificController.getUserSpecificPosts);
 router
   .route("/:postId")
   .get(postController.getPostById)
-  .put([authorize, postAuthorize], postController.updatePostById)
+  .put(
+    [authorize, postAuthorize, postPhotosUpload],
+    postController.updatePostById
+  )
   .delete([authorize, postAuthorize], postController.deletePostById);
 
 router

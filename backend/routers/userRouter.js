@@ -8,6 +8,8 @@ const { profilePhotoUpload } = require("../middlewares/fileSaver");
 router
   .route("/")
   .get(authorize, userController.getCurrentUser)
+  .put([authorize, profilePhotoUpload], userController.updateUser)
+  .delete([authorize], userController.deleteUser)
   .post((req, res) => {
     return res
       .status(400)
