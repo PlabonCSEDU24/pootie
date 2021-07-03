@@ -12,7 +12,8 @@ import Profile from "../screens/tabs/Profile";
 import Context from "../context/Context";
 import AuthStack from "./AuthStack";
 import PostStack from "./postStack";
-import EditProfile from "../screens/nested/EditProfile"
+import EditProfile from "../screens/nested/EditProfile";
+import CreatePost from "../screens/tabs/CreatePost";
 
 const Tab = createBottomTabNavigator();
 
@@ -104,7 +105,7 @@ export default function TabNavigator() {
 
         <Tab.Screen
           name={"Notifications"}
-          component={Home}
+          component={CreatePost}
           options={{
             tabBarIcon: ({ focused }) => (
               <AntDesign
@@ -127,7 +128,7 @@ export default function TabNavigator() {
 
         <Tab.Screen
           name={"profile"}
-          component={isLoggedIn ? Profile : AuthStack}
+          component={Profile}
           options={{
             tabBarIcon: ({ focused }) => (
               <AntDesign
