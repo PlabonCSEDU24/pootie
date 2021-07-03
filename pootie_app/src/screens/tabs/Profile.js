@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
-import { View, Text, Button, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { COLORS, SIZES, FONTS } from "../../constants";
 import Context from "../../context/Context";
-import FilledButton from "../../components/FilledButton";
 import { TouchableOpacity } from "react-native";
 import { Feather, SimpleLineIcons } from '@expo/vector-icons';
 
@@ -33,7 +32,7 @@ const Profile = ({ navigation }) => {
           <Text style={styles.userText}>{mailId}</Text>
         </View>
         <View flexDirection='row'>
-          <Text style={styles.bigText}>Contact No. :</Text>
+          <Text style={styles.bigText}>Contact No. : </Text>
           <Text style={styles.userText}>{contact}</Text>
         </View>
       </View >
@@ -82,7 +81,7 @@ const styles = StyleSheet.create({
   textMargin: {
     marginLeft: 40,
     marginTop: 50,
-    alignContent: 'flex-start'
+    padding: 15,
   },
   imageContainer: {
     alignItems: 'center',
