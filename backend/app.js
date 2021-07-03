@@ -15,10 +15,10 @@ const app = express();
 
 app.use(compression());
 app.use(cors());
-app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+app.use(express.json());
 app.use("/api/contents", express.static("public/"));
-
 app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
 
