@@ -153,12 +153,10 @@ const updateUser = async (req, res) => {
 
     const userId = req.user._id;
     const newValues = { ...req.body };
-    console.log(newValues.currentPassword, req.user.password);
     const passTest = await bcrypt.compare(
       newValues.currentPassword,
       req.user.password
     );
-    console.log(passTest);
     if (!passTest) throw Error("Wrong password given!");
 
     // handle profile picture
@@ -192,7 +190,7 @@ const updateUser = async (req, res) => {
     const updatedInfo = await User.findByIdAndUpdate(userId, update, {
       new: true,
     });
-
+    const token = updatedInfo.getJWT();
     const ret = _.pick(updatedInfo, [
       "_id",
       "email",
@@ -200,7 +198,7 @@ const updateUser = async (req, res) => {
       "contact_no",
       "profilePhoto",
     ]);
-    return res.status(200).send(ret);
+    return res.status(200).send({ token: token, user: ret });
   } catch (err) {
     return res.status(400).send(defaultErrorMsg(err));
   }
