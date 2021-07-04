@@ -35,6 +35,7 @@ const addCommentToPost = async (req, res) => {
     const comment = {
       ...req.body,
       userId: req.user._id,
+      userName: req.user.name,
     };
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.postId,
