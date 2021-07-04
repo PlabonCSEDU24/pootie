@@ -169,12 +169,8 @@ const updateUser = async (req, res) => {
         fileName: imagefile.filename,
       };
       newValues.profilePhoto = profilePhoto;
-    } else {
-      newValues.profilePhoto = {
-        path: null,
-        fileName: null,
-      };
     }
+    
     if (newValues.newPassword) {
       const salt = await bcrypt.genSalt(10);
       newValues.password = await bcrypt.hash(newValues.newPassword, salt);

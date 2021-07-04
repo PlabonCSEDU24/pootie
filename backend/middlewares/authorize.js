@@ -26,10 +26,7 @@ module.exports = async function authorize(req, res, next) {
       ]);
       next();
     } else throw new Error("This user does not exist!");
-    // TODO: cross check in the database with the userid
   } catch (err) {
-    return res
-      .status(400)
-      .send({ msg: "Something went wrong! " + err.message });
+    return res.status(400).send({ msg: "Some problem with token" });
   }
 };
