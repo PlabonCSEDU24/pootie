@@ -22,22 +22,34 @@ const imageStorage = multer.diskStorage({
   },
 });
 
-module.exports.postPhotosUpload = multer({
-  storage: imageStorage,
-  limits: { fileSize: 1024 * 1024 * 3 },
-  fileFilter: (req, file, cb) => {
-    const isValid = !!MIME_TYPE_MAP_for_profile_pic[file.mimetype];
-    if (isValid) cb(null, true);
-    else cb("Filetype not supported", false);
-  },
-}).array("photos");
+module.exports.postPhotosUpload = (req, res, next) => {
+  multer({
+    storage: imageStorage,
+    limits: { fileSize: 1024 * 1024 * 3 },
+    fileFilter: (req, file, cb) => {
+      const isValid = !!MIME_TYPE_MAP_for_profile_pic[file.mimetype];
+      if (isValid) cb(null, true);
+      else cb("Filetype not supported", false);
+    },
+  }).array("photos")(req, res, (err) => {
+    if (err) next(err);
+    else next();
+  });
+};
 
-module.exports.profilePhotoUpload = multer({
-  storage: imageStorage,
-  limits: { fileSize: 1024 * 1024 * 3 },
-  fileFilter: (req, file, cb) => {
-    const isValid = !!MIME_TYPE_MAP_for_profile_pic[file.mimetype];
-    if (isValid) cb(null, true);
-    else cb("Filetype not supported", false);
-  },
-}).single("profilePhoto");
+module.exports.profilePhotoUpload = (req, res, next) => {
+  multer({
+    storage: imageStorage,
+    limits: { fileSize: 1024 * 1024 * 3 },
+    fileFilter: (req, file, cb) => {
+      const isValid = !!MIME_TYPE_MAP_for_profile_pic[file.mimetype];
+      if (isValid) cb(null, true);
+      else {
+        cb(Error("Filetype not supported"));
+      }
+    },
+  }).single("profilePhoto")(req, res, (err) => {
+    if (err) next(err);
+    else next();
+  });
+};
