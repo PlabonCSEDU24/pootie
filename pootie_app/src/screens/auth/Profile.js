@@ -1,72 +1,94 @@
 import React, { useContext } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
-import { COLORS, SIZES, FONTS } from "../../constants";
+import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import { COLORS, SIZES, FONTS, images } from "../../constants";
 import Context from "../../context/Context";
 import { TouchableOpacity } from "react-native";
-import { Feather, SimpleLineIcons } from '@expo/vector-icons';
-
-
-
-const username = "Lionel Messi"
-const mailId = "leo@lm10.com"
-const contact = "1234567890"
+import { Feather, SimpleLineIcons } from "@expo/vector-icons";
+import { BACKEND_URL } from "../../constants/config";
 
 const Profile = ({ navigation }) => {
-  const { user } = useContext(Context);
-  return (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image
-          source={{ uri: "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcR_BSXPlBjoBeJruSaCamv7kQuMNjoIIWX0CITXUVoapFCbRM9g" }}
-          style={styles.image}
-        />
-        <Text style={styles.bigText}>Photo</Text>
-      </View>
-      <View style={styles.textMargin}>
-        <View flexDirection='row'>
-          <Text style={styles.bigText}>User Name: </Text>
-          <Text style={styles.userText}>{username}</Text>
-        </View>
-        <View flexDirection='row'>
-          <Text style={styles.bigText}>Mail: </Text>
-          <Text style={styles.userText}>{mailId}</Text>
-        </View>
-        <View flexDirection='row'>
-          <Text style={styles.bigText}>Contact No. : </Text>
-          <Text style={styles.userText}>{contact}</Text>
-        </View>
-      </View >
-      <View style={styles.bottom}>
-        <TouchableOpacity
-          onPress={() => { console.log("profile edited") }}
-        >
-          <View flexDirection='row'>
-            <Feather name="edit" size={24} color="black" />
-            <Text style={styles.buttonText}>Edit profile</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => { console.log("logged out") }}
-        >
-          <View flexDirection='row'>
-            <SimpleLineIcons name="logout" size={24} color="black" />
-            <Text style={styles.buttonText}>Logout</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    </View >
-  );
+  const { user, logout } = useContext(Context);
 
+  console.log(user);
+
+  let userProfilePicUri = null;
+  let profilePhotoText = "No profile photo!";
+
+  if (user?.profilePhoto?.fileName) {
+    userProfilePicUri = `${BACKEND_URL}/api/contents/images/${user.profilePhoto.fileName}`;
+    profilePhotoText = "Your profile photo";
+  }
+  console.log(userProfilePicUri);
+
+  return (
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image
+            source={
+              userProfilePicUri ? { uri: userProfilePicUri } : images.default_dp
+            }
+            style={styles.image}
+          />
+        </View>
+        <Text style={styles.profilePhotoText}>{profilePhotoText}</Text>
+        <View style={styles.textMargin}>
+          <View flexDirection="column">
+            <Text style={styles.bigText}>Name: </Text>
+            <Text style={styles.userText}>{user.name}</Text>
+          </View>
+          <View flexDirection="column">
+            <Text style={styles.bigText}>Mail: </Text>
+            <Text style={styles.userText}>{user.email}</Text>
+          </View>
+          <View flexDirection="column">
+            <Text style={styles.bigText}>Contact No. : </Text>
+            <Text style={styles.userText}>{user.contact_no}</Text>
+          </View>
+        </View>
+        <View style={styles.bottom}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("ProfileEdit");
+            }}
+          >
+            <View flexDirection="row">
+              <Feather name="edit" size={24} color={COLORS.primary} />
+              <Text style={styles.buttonText}>Edit profile</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              logout();
+            }}
+          >
+            <View flexDirection="row">
+              <SimpleLineIcons
+                name="logout"
+                size={24}
+                color={COLORS.lightRed}
+              />
+              <Text style={styles.buttonText}>Logout</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
+  );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
-    marginTop: 60,
+    padding: SIZES.padding,
+  },
+  profilePhotoText: {
+    ...FONTS.body2,
+    color: COLORS.lightGray,
+    textAlign: "center",
   },
   bigText: {
-    fontSize: 25,
-    fontWeight: 'bold',
+    ...FONTS.body2,
     color: COLORS.lightGray,
   },
   image: {
@@ -76,30 +98,32 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderWidth: 2,
     borderColor: COLORS.primary,
-    marginHorizontal: 100
+    // marginHorizontal: 100,
+    padding: SIZES.padding,
   },
   textMargin: {
-    marginLeft: 40,
-    marginTop: 50,
-    padding: 15,
+    padding: SIZES.padding2,
   },
   imageContainer: {
-    alignItems: 'center',
-
+    alignItems: "center",
+    justifyContent: "center",
+    padding: SIZES.padding,
+    overflow: "hidden",
   },
   bottom: {
-    marginTop: 150,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly'
+    padding: SIZES.padding,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginBottom: 100,
   },
   userText: {
-    fontSize: 25,
-    fontWeight: '300',
+    ...FONTS.body2,
   },
   buttonText: {
     fontSize: 20,
-    fontWeight: 'bold',
-  }
+    fontWeight: "bold",
+    marginLeft: 10,
+  },
 });
 
 export default Profile;

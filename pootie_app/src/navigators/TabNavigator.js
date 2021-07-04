@@ -8,12 +8,11 @@ import { AntDesign } from "@expo/vector-icons";
 import TabBarCustomButton from "../components/TabBarCustomButton";
 import { COLORS, SIZES } from "../constants";
 import HomeStack from "./HomeStack";
-import Profile from "../screens/tabs/Profile";
 import Context from "../context/Context";
 import AuthStack from "./AuthStack";
 import PostStack from "./postStack";
-import EditProfile from "../screens/nested/EditProfile";
 import CreatePost from "../screens/tabs/CreatePost";
+import ProfileStack from "./ProfileStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -58,7 +57,7 @@ export default function TabNavigator() {
 
         <Tab.Screen
           name={"Nearby"}
-          component={EditProfile}
+          component={Home}
           options={{
             tabBarIcon: ({ focused }) => (
               <AntDesign
@@ -127,8 +126,8 @@ export default function TabNavigator() {
         ></Tab.Screen>
 
         <Tab.Screen
-          name={"profile"}
-          component={Profile}
+          name={"profileScreen"}
+          component={isLoggedIn ? ProfileStack : AuthStack}
           options={{
             tabBarIcon: ({ focused }) => (
               <AntDesign

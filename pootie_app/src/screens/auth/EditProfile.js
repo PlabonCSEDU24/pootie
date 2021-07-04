@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
-import { COLORS, SIZES, FONTS } from "../../constants";
+import { View, Text, StyleSheet, Image, TextInput } from "react-native";
+import { COLORS, SIZES, FONTS, images } from "../../constants";
 import Context from "../../context/Context";
 import { TouchableOpacity } from "react-native";
 import {
@@ -15,17 +15,116 @@ import Input from "../../components/Input";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { Keyboard } from "react-native";
 import { ScrollView } from "react-native";
+import { Alert } from "react-native";
+import { BACKEND_URL } from "../../constants/config";
+import { useHttpClient } from "../../uitls/http-hook";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const username = "Lionel Messi";
-const mailId = "leo@lm10.com";
-const contact = "1234567890";
+// TODO: if error occurs focus on that field using useRef()
 
-const Profile = ({ navigation }) => {
+const EditProfile = ({ navigation }) => {
+  const { user, setUser } = useContext(Context);
+  let userProfilePicUri = null;
+  if (user?.profilePhoto?.fileName) {
+    userProfilePicUri = `${BACKEND_URL}/api/contents/images/${user.profilePhoto.fileName}`;
+  }
   const [showModal, setShowModal] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(
-    "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcR_BSXPlBjoBeJruSaCamv7kQuMNjoIIWX0CITXUVoapFCbRM9g"
-  );
-  const { user } = useContext(Context);
+  const [selectedImage, setSelectedImage] = useState(userProfilePicUri);
+  const [name, setName] = useState(user.name);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [contactNo, setContactNo] = useState(user.contact_no);
+
+  const { isLoading, error, sendRequest } = useHttpClient();
+
+  const storeUser = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem("auth_user", jsonValue);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const storeToken = async (value) => {
+    try {
+      await AsyncStorage.setItem("auth_token", value);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const sendUserUpdateRequest = async (update) => {
+    try {
+      const responseData = await sendRequest(
+        `${BACKEND_URL}/api/users`,
+        "PUT",
+        update
+      );
+      if (responseData) {
+        console.log(responseData);
+        setUser(responseData.user);
+        storeToken(responseData.token);
+        storeUser(responseData.user);
+        navigation.navigate("Profile");
+      }
+    } catch (err) {
+      // console.log(err);
+      Alert.alert("Update Failed", err.message, [
+        { text: "Dismiss", style: "default" },
+      ]);
+    }
+  };
+
+  const handleUpdateSubmit = () => {
+    const update = new FormData();
+    let shouldUpdate = false;
+    if (newPassword !== confirmNewPassword) {
+      Alert.alert(
+        "Password Confirm Error",
+        "New password and confirm new password does not match",
+        [{ text: "Dismiss", style: "default" }]
+      );
+      return;
+    }
+    if (currentPassword === "") {
+      Alert.alert(
+        "Must need password",
+        "We need your current password to change your profile infos",
+        [{ text: "Dismiss", style: "default" }]
+      );
+      return;
+    }
+    if (user.name !== name) {
+      shouldUpdate = true;
+      update.append("name", name);
+    }
+    if (user.contact_no !== contactNo) {
+      shouldUpdate = true;
+      update.append("contact_no", contactNo);
+    }
+    update.append("currentPassword", currentPassword);
+    if (newPassword !== "") {
+      shouldUpdate = true;
+      update.append("newPassword", newPassword);
+    }
+    // console.log(userProfilePicUri === selectedImage);
+    if (selectedImage !== userProfilePicUri) {
+      shouldUpdate = true;
+      let filename = selectedImage.split("/").pop();
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+      update.append("profilePhoto", {
+        uri: selectedImage,
+        name: filename,
+        type,
+      });
+    }
+    // console.log(update);
+    if (shouldUpdate) sendUserUpdateRequest(update);
+    else {
+      Alert.alert("Nothing to update", "You did not change anything");
+    }
+  };
 
   const takePicture = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -65,7 +164,7 @@ const Profile = ({ navigation }) => {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (!result.cancelled) {
       setSelectedImage(result.uri);
@@ -84,9 +183,9 @@ const Profile = ({ navigation }) => {
         >
           <View style={styles.imageContainer}>
             <Image
-              source={{
-                uri: selectedImage,
-              }}
+              source={
+                selectedImage ? { uri: selectedImage } : images.default_dp
+              }
               style={styles.image}
             />
             <TouchableOpacity
@@ -108,24 +207,47 @@ const Profile = ({ navigation }) => {
           <View style={styles.textMargin}>
             <View style={styles.inBetweenText}>
               <Feather name="user" size={24} color="black" />
-              <Text style={styles.userText}> User Name</Text>
+              <Text style={styles.userText}>User Name</Text>
             </View>
-            <Input value={username} />
+            <Input value={name} onChangeText={setName} />
             <View style={styles.inBetweenText}>
               <Feather name="mail" size={24} color="black" />
-              <Text style={styles.userText}> Mail</Text>
+              <Text style={styles.userText}>Current Password</Text>
             </View>
-            <Input value={mailId} />
+            <Input
+              value={currentPassword}
+              placeholder={"(This is required)"}
+              onChangeText={setCurrentPassword}
+              secureTextEntry
+            />
+            <View style={styles.inBetweenText}>
+              <Feather name="mail" size={24} color="black" />
+              <Text style={styles.userText}>New Password</Text>
+            </View>
+            <Input
+              value={newPassword}
+              onChangeText={setNewPassword}
+              secureTextEntry
+            />
+            <View style={styles.inBetweenText}>
+              <Feather name="mail" size={24} color="black" />
+              <Text style={styles.userText}>Confirm New Password</Text>
+            </View>
+            <Input
+              value={confirmNewPassword}
+              onChangeText={setConfirmNewPassword}
+              secureTextEntry
+            />
             <View style={styles.inBetweenText}>
               <Feather name="phone-call" size={24} color="black" />
-              <Text style={styles.userText}> Contact No.</Text>
+              <Text style={styles.userText}>Contact No.</Text>
             </View>
-            <Input value={contact} />
+            <Input value={contactNo} onChangeText={setContactNo} />
           </View>
           <View style={styles.bottom}>
             <TouchableOpacity
               onPress={() => {
-                console.log("update cancelled");
+                navigation.navigate("Profile");
               }}
             >
               <View style={styles.buttonContainer}>
@@ -135,7 +257,7 @@ const Profile = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                console.log("update done");
+                handleUpdateSubmit();
               }}
             >
               <View style={styles.buttonContainer}>
@@ -161,7 +283,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.white,
-    marginTop: 60,
+    padding: SIZES.padding2,
   },
   image: {
     width: 200,
@@ -170,14 +292,14 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderWidth: 2,
     borderColor: COLORS.primary,
-    marginHorizontal: 100,
+    // marginHorizontal: 100,
   },
   textMargin: {
-    marginHorizontal: 40,
     marginTop: 20,
   },
   imageContainer: {
     alignItems: "center",
+    padding: SIZES.padding,
   },
   bottom: {
     marginTop: 30,
@@ -186,13 +308,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   userText: {
-    fontSize: 18,
+    fontSize: FONTS.body2.fontSize,
     fontWeight: "900",
+    paddingHorizontal: SIZES.padding,
   },
   buttonText: {
     fontSize: 20,
     fontWeight: "bold",
-		marginLeft: 5,
+    marginLeft: 5,
   },
   updatePhoto: {
     marginTop: 20,
@@ -207,9 +330,9 @@ const styles = StyleSheet.create({
   bigText: {
     fontSize: 20,
   },
-	buttonContainer: {
-		flexDirection: 'row',
-	}
+  buttonContainer: {
+    flexDirection: "row",
+  },
 });
 
-export default Profile;
+export default EditProfile;
