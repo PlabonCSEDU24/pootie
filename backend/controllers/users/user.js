@@ -147,8 +147,19 @@ const updateUser = async (req, res) => {
     if (req.body.email) {
       throw new Error("email field cannot be updated!");
     }
+    if (!req.body.currentPassword) {
+      throw new Error("Without password we will not change any info!");
+    }
+
     const userId = req.user._id;
-    const update = { ...req.body };
+    const newValues = { ...req.body };
+    const passTest = await bcrypt.compare(
+      newValues.currentPassword,
+      req.user.password
+    );
+    if (!passTest) throw Error("Wrong password given!");
+
+    // handle profile picture
     if (req.file) {
       if (req.user.profilePhoto.path)
         await fs.unlink(req.user.profilePhoto.path);
@@ -157,20 +168,25 @@ const updateUser = async (req, res) => {
         path: imagefile.path,
         fileName: imagefile.filename,
       };
-      update.profilePhoto = profilePhoto;
-    } else {
-      user.profilePhoto = {
-        path: null,
-        fileName: null,
-      };
+      newValues.profilePhoto = profilePhoto;
     }
-    if (update.password) {
+    
+    if (newValues.newPassword) {
       const salt = await bcrypt.genSalt(10);
-      update.password = await bcrypt.hash(update.password, salt);
+      newValues.password = await bcrypt.hash(newValues.newPassword, salt);
     }
+
+    const update = _.pick(newValues, [
+      "name",
+      "password",
+      "contact_no",
+      "profilePhoto",
+    ]);
+
     const updatedInfo = await User.findByIdAndUpdate(userId, update, {
       new: true,
     });
+    const token = updatedInfo.getJWT();
     const ret = _.pick(updatedInfo, [
       "_id",
       "email",
@@ -178,7 +194,7 @@ const updateUser = async (req, res) => {
       "contact_no",
       "profilePhoto",
     ]);
-    return res.status(200).send(ret);
+    return res.status(200).send({ token: token, user: ret });
   } catch (err) {
     return res.status(400).send(defaultErrorMsg(err));
   }

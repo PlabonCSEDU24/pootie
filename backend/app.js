@@ -36,6 +36,17 @@ const server = app.listen(process.env.PORT || PORT, async () => {
   console.log(`server started on port ${PORT}`);
 });
 
+app.use(function (err, req, res, next) {
+  if (err) {
+    return res
+      .status(500)
+      .send({ msg: err.message || "Something bad happened 🙃" });
+
+  } else {
+    return res.status(400).send({ msg: "🙃 Something went wrong! 😐"})
+  }
+});
+
 app.use("/", (req, res) => {
   return res
     .status(400)

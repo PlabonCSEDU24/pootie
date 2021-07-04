@@ -19,16 +19,14 @@ module.exports = async function authorize(req, res, next) {
       req.user = _.pick(user, [
         "name",
         "email",
+        "password",
         "contact_no",
         "_id",
         "profilePhoto",
       ]);
       next();
     } else throw new Error("This user does not exist!");
-    // TODO: cross check in the database with the userid
   } catch (err) {
-    return res
-      .status(400)
-      .send({ msg: "Something went wrong! " + err.message });
+    return res.status(400).send({ msg: "Some problem with token" });
   }
 };
