@@ -19,6 +19,7 @@ module.exports = async function authorize(req, res, next) {
       req.user = _.pick(user, [
         "name",
         "email",
+        "password",
         "contact_no",
         "_id",
         "profilePhoto",

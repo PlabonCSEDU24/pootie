@@ -147,8 +147,21 @@ const updateUser = async (req, res) => {
     if (req.body.email) {
       throw new Error("email field cannot be updated!");
     }
+    if (!req.body.currentPassword) {
+      throw new Error("Without password we will not change any info!");
+    }
+
     const userId = req.user._id;
-    const update = { ...req.body };
+    const newValues = { ...req.body };
+    console.log(newValues.currentPassword, req.user.password);
+    const passTest = await bcrypt.compare(
+      newValues.currentPassword,
+      req.user.password
+    );
+    console.log(passTest);
+    if (!passTest) throw Error("Wrong password given!");
+
+    // handle profile picture
     if (req.file) {
       if (req.user.profilePhoto.path)
         await fs.unlink(req.user.profilePhoto.path);
@@ -157,20 +170,29 @@ const updateUser = async (req, res) => {
         path: imagefile.path,
         fileName: imagefile.filename,
       };
-      update.profilePhoto = profilePhoto;
+      newValues.profilePhoto = profilePhoto;
     } else {
-      user.profilePhoto = {
+      newValues.profilePhoto = {
         path: null,
         fileName: null,
       };
     }
-    if (update.password) {
+    if (newValues.newPassword) {
       const salt = await bcrypt.genSalt(10);
-      update.password = await bcrypt.hash(update.password, salt);
+      newValues.password = await bcrypt.hash(newValues.newPassword, salt);
     }
+
+    const update = _.pick(newValues, [
+      "name",
+      "password",
+      "contact_no",
+      "profilePhoto",
+    ]);
+
     const updatedInfo = await User.findByIdAndUpdate(userId, update, {
       new: true,
     });
+
     const ret = _.pick(updatedInfo, [
       "_id",
       "email",
