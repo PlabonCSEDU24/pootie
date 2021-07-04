@@ -23,7 +23,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // TODO: if error occurs focus on that field using useRef()
 
 const EditProfile = ({ navigation }) => {
-  const { user, setUser } = useContext(Context);
+  const { user, setUser, setAuthToken } = useContext(Context);
   let userProfilePicUri = null;
   if (user?.profilePhoto?.fileName) {
     userProfilePicUri = `${BACKEND_URL}/api/contents/images/${user.profilePhoto.fileName}`;
@@ -61,8 +61,9 @@ const EditProfile = ({ navigation }) => {
         update
       );
       if (responseData) {
-        console.log(responseData);
+        // console.log("Edit profile ln 64: after updating", responseData);
         setUser(responseData.user);
+        setAuthToken(responseData.token);
         storeToken(responseData.token);
         storeUser(responseData.user);
         navigation.navigate("Profile");
@@ -107,7 +108,6 @@ const EditProfile = ({ navigation }) => {
       shouldUpdate = true;
       update.append("newPassword", newPassword);
     }
-    // console.log(userProfilePicUri === selectedImage);
     if (selectedImage !== userProfilePicUri) {
       shouldUpdate = true;
       let filename = selectedImage.split("/").pop();
@@ -139,12 +139,12 @@ const EditProfile = ({ navigation }) => {
         aspect: [4, 3],
         quality: 1,
       });
-      console.log(result);
+      // console.log(result);
 
       if (!result.cancelled) {
         setSelectedImages(result.uri);
         setShowModal(false);
-        console.log(result.uri);
+        // console.log(result.uri);
       }
     } catch (err) {
       console.log(err);
@@ -169,7 +169,7 @@ const EditProfile = ({ navigation }) => {
     if (!result.cancelled) {
       setSelectedImage(result.uri);
       setShowModal(false);
-      console.log(result.uri);
+      // console.log(result.uri);
     }
   };
 

@@ -9,7 +9,7 @@ import { BACKEND_URL } from "../../constants/config";
 const Profile = ({ navigation }) => {
   const { user, logout } = useContext(Context);
 
-  console.log(user);
+  // console.log(user);
 
   let userProfilePicUri = null;
   let profilePhotoText = "No profile photo!";
@@ -18,7 +18,7 @@ const Profile = ({ navigation }) => {
     userProfilePicUri = `${BACKEND_URL}/api/contents/images/${user.profilePhoto.fileName}`;
     profilePhotoText = "Your profile photo";
   }
-  console.log(userProfilePicUri);
+  // console.log(userProfilePicUri);
 
   return (
     <ScrollView>
