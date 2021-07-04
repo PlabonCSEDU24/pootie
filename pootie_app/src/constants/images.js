@@ -17,6 +17,7 @@ export const poem = require("../../assets/icons/poem.png");
 export const school = require("../../assets/icons/school.png");
 export const sport = require("../../assets/icons/sport.png");
 export const more = require("../../assets/icons/more.png");
+export const default_dp = require("../../assets/images/default_profile_picture.png");
 
 export default {
   book_stack,
@@ -38,4 +39,5 @@ export default {
   school,
   sport,
   more,
+  default_dp
 };
