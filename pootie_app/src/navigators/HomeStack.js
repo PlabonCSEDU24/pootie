@@ -4,6 +4,7 @@ import Home from "../screens/tabs/Home";
 import { Text } from "react-native";
 import PostDetail from "../screens/nested/PostDetail";
 import CustomHeader from "../components/CustomHeader";
+import PostsByCategory from "../screens/nested/PostsByCategory";
 const Stack = createStackNavigator();
 const HomeStack = () => {
   return (
@@ -21,6 +22,11 @@ const HomeStack = () => {
         options={{ headerShown: false }}
         name="postDetail"
         component={PostDetail}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="postsByCategory"
+        component={PostsByCategory}
       />
     </Stack.Navigator>
   );

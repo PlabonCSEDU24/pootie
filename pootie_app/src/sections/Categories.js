@@ -11,13 +11,13 @@ import { COLORS, FONTS, images, SIZES } from "../constants";
 //dummy categories
 import categories from "../constants/Categories";
 
-const Categories = () => {
+const Categories = ({ navigation }) => {
   //category item that will be rendered
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.categoryItem}
       onPress={() => {
-        alert(item.title);
+        navigation.navigate("postsByCategory", { category: item.title });
       }}
     >
       <Image

@@ -9,7 +9,7 @@ const Home = ({ navigation }) => {
   const { posts, setPosts } = useContext(Context);
   return (
     <View style={styles.container}>
-      <Categories />
+      <Categories navigation={navigation} />
       {/*<Button title="post detail" onPress={() => navigation.navigate("post")} />*/}
       <Posts posts={posts} navigation={navigation} />
     </View>
