@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
   },
   title: {
     marginLeft: 20,
-    ...FONTS.body3_bangla,
+    ...FONTS.body2_bangla,
   },
 });

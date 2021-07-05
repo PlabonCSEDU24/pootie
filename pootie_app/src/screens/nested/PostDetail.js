@@ -1,154 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
+  ActivityIndicator,
   TouchableOpacity,
   Platform,
   Linking,
-  FlatList,
   ScrollView,
 } from "react-native";
+import TimeAgo from "react-native-timeago";
+import { BACKEND_URL } from "../../constants/config";
 import { COLORS, FONTS } from "../../constants";
 import Header from "../../components/Header";
-import {
-  Feather,
-  MaterialCommunityIcons,
-  FontAwesome5,
-  Ionicons,
-} from "@expo/vector-icons";
+import { Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import Carousel from "../../components/Carousel";
 import FilledButton from "../../components/FilledButton";
-const { width: screenWidth } = Dimensions.get("window");
-const timeOptions = {
-  month: "short",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric",
-};
-const Comments = [
-  {
-    id: "1",
-    username: "Plabon",
-    comment: "Nice book,fngfkdghndghfdghbdfikgfdiughdiughdiughdigduidikgdi",
-  },
-  {
-    id: "2",
-    username: "Yo",
-    comment: "I want it",
-  },
-  {
-    id: "3",
-    username: "Plabon",
-    comment: "Nice book",
-  },
-  {
-    id: "4",
-    username: "Yo",
-    comment: "I want it",
-  },
-  {
-    id: "5",
-    username: "Yo",
-    comment: "I want it",
-  },
-  {
-    id: "6",
-    username: "Plabon",
-    comment: "Nice book",
-  },
-  {
-    id: "7",
-    username: "Yo",
-    comment: "I want it",
-  },
-  {
-    id: "8",
-    username: "Plabon",
-    comment: "Nice book",
-  },
-  {
-    id: "9",
-    username: "Yo",
-    comment: "I want it",
-  },
-  {
-    id: "10",
-    username: "Yo",
-    comment: "I want it",
-  },
-  {
-    id: "11",
-    username: "Plabon",
-    comment: "Nice book",
-  },
-  {
-    id: "12",
-    username: "Yo",
-    comment: "I want it",
-  },
-  {
-    id: "13",
-    username: "Plabon",
-    comment: "Nice book",
-  },
-  {
-    id: "14",
-    username: "Yo",
-    comment: "I want it",
-  },
-  {
-    id: "15",
-    username: "Yo",
-    comment: "I want it",
-  },
-  {
-    id: "16",
-    username: "Plabon",
-    comment: "Nice book",
-  },
-  {
-    id: "17",
-    username: "Yo",
-    comment: "I want it",
-  },
-  {
-    id: "18",
-    username: "Plabon",
-    comment: "Nice book",
-  },
-  {
-    id: "19",
-    username: "Yo",
-    comment: "I want it",
-  },
-  {
-    id: "20",
-    username: "Yo",
-    comment: "I want it",
-  },
-];
+import { useHttpClient } from "../../uitls/http-hook";
 const PostDetail = ({ route, navigation }) => {
+  const { isLoading, sendRequest } = useHttpClient();
+  const [myComment, setMyComment] = useState("");
+  const [comments, setComments] = useState([]);
   const {
     _id,
     bookName,
     price,
     author,
     description,
-    category,
     photos,
-    comments,
     contactInfo,
     createdAt,
   } = route.params;
 
-  const [commentID, setCommentID] = useState(null);
-
-  let SellerContact = contactInfo.phone;
+  useEffect(() => {
+    fetchComments();
+  }, []);
 
   const makeCall = () => {
+    let SellerContact = contactInfo.phone;
     if (Platform.OS === "android") {
       SellerContact = "tel:$(" + SellerContact + ")";
     } else {
@@ -156,16 +46,39 @@ const PostDetail = ({ route, navigation }) => {
     }
     Linking.openURL(SellerContact);
   };
-
-  const renderComment = ({ item }) => (
-    <View style={styles.commentList} key={item.id}>
-      <FontAwesome5 name="user-circle" size={24} color="black" />
-      <View style={{ marginLeft: 10 }}>
-        <Text style={styles.commentUser}>{item.username}</Text>
-        <Text style={{ marginRight: 20 }}>{item.comment}</Text>
-      </View>
-    </View>
-  );
+  const fetchComments = async () => {
+    try {
+      const responseData = await sendRequest(
+        BACKEND_URL + `/api/posts/${_id}/comments/`
+      );
+      console.log(responseData);
+      if (responseData) {
+        setComments(responseData);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const makeComment = async () => {
+    try {
+      const responseData = await sendRequest(
+        BACKEND_URL + `/api/posts/${_id}/comments`,
+        "POST",
+        JSON.stringify({
+          comment: myComment,
+        }),
+        {
+          "Content-Type": "application/json",
+        }
+      );
+      if (responseData) {
+        setComments(responseData.comments);
+        setMyComment("");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -177,6 +90,8 @@ const PostDetail = ({ route, navigation }) => {
             <Text style={styles.bookName}>{bookName}</Text>
             <Text style={styles.priceText}>{"৳ " + price}</Text>
           </View>
+          <Text style={styles.authorText}> {author}</Text>
+
           <View style={styles.addSec}>
             <Ionicons name="location-outline" size={20} color="black" />
             <Text style={styles.addText}> {contactInfo.address}</Text>
@@ -186,27 +101,54 @@ const PostDetail = ({ route, navigation }) => {
             <Ionicons name="time-outline" size={20} color="black" />
             <Text style={styles.addText}>
               {" "}
-              {new Date(createdAt).toLocaleDateString(undefined, timeOptions)}
+              {new Date(createdAt).toLocaleDateString()}
             </Text>
           </View>
           <Text style={styles.detailTxt}> {description}</Text>
 
-          <View style={styles.margin} height="30%">
-            {/*<Text style={styles.textComment}>Comments</Text>
-            <FlatList data={Comments} renderItem={renderComment} />*/}
-          </View>
           <View style={styles.commentContainer}>
-            <TextInput placeholder="add a comment"></TextInput>
-            <TouchableOpacity
-              TouchableOpacity={0.6}
-              onPress={() => {
-                console.log("posted");
+            <View style={styles.div} />
+            {comments.map((comment) => {
+              return (
+                <View key={comment._id} style={styles.wrappererAbba}>
+                  <View style={styles.commentWrapper}>
+                    <FontAwesome name="user-o" size={24} color="black" />
+                    <View style={styles.commentThread}>
+                      <Text style={styles.userTxt}>{comment.userName}</Text>
+                      <Text style={styles.commentTxt}>{comment.comment}</Text>
+                    </View>
+                  </View>
+                  <TimeAgo
+                    style={styles.timeText}
+                    hideAgo={true}
+                    time={comment.time}
+                  />
+                </View>
+              );
+            })}
+          </View>
+          <View style={styles.addComment}>
+            <TextInput
+              value={myComment}
+              multiline={true}
+              onChangeText={(text) => {
+                setMyComment(text);
               }}
-            >
-              <MaterialCommunityIcons name="send" size={24} color="black" />
-            </TouchableOpacity>
+              selectionColor={COLORS.primary}
+              style={styles.textInput}
+              placeholder="কমেন্ট করুন..."
+            />
+            {isLoading && (
+              <ActivityIndicator size="small" color={COLORS.primary} />
+            )}
+            {!isLoading && (
+              <TouchableOpacity TouchableOpacity={0.6} onPress={makeComment}>
+                <Ionicons name="send" size={24} color={COLORS.primary} />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
+        <View paddingVertical={200} />
       </ScrollView>
       <View style={styles.bottomSection}>
         <FilledButton
@@ -233,12 +175,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
   },
-  body: {},
-
-  item: {
-    width: screenWidth - 60,
-    height: screenWidth - 150,
-  },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -259,16 +195,17 @@ const styles = StyleSheet.create({
   bookName: {
     ...FONTS.body1,
   },
-  margin: {
-    marginTop: 5,
-    marginLeft: 30,
-    marginRight: 10,
-    height: "15%",
+  div: {
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.lightGray2,
+    marginBottom: 20,
   },
+
   bottomSection: {
     position: "absolute",
     paddingHorizontal: 10,
-    paddingVertical: 6,
+    borderTopEndRadius: 10,
+    borderTopStartRadius: 10,
     backgroundColor: COLORS.white,
     flexDirection: "row",
     height: "18%",
@@ -297,6 +234,10 @@ const styles = StyleSheet.create({
     ...FONTS.body3_bangla,
     color: COLORS.lightGray4,
   },
+  authorText: {
+    ...FONTS.body2_bangla,
+    color: COLORS.lightGray4,
+  },
   priceText: {
     ...FONTS.body3,
     color: COLORS.links,
@@ -316,17 +257,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   commentContainer: {
-    flexDirection: "row",
-    marginLeft: 30,
-    marginRight: 10,
-    marginTop: 10,
-    borderColor: "black",
-    borderBottomWidth: 1,
-    justifyContent: "space-between",
+    marginTop: 20,
   },
   commentUser: {
     fontSize: 16,
     fontWeight: "bold",
+  },
+  userTxt: {
+    ...FONTS.body2,
+  },
+  commentTxt: {
+    ...FONTS.body2_bangla,
   },
   commentList: {
     flexDirection: "row",
@@ -335,8 +276,42 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 10,
   },
+  wrappererAbba: {
+    marginBottom: 10,
+  },
+  commentWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  commentThread: {
+    alignSelf: "flex-start",
+    backgroundColor: COLORS.lightGray2,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    paddingBottom: 6,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  addComment: {
+    marginTop: 20,
+    flexDirection: "row",
+    backgroundColor: COLORS.lightGray2,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 30,
+    justifyContent: "space-between",
+  },
+  timeText: {
+    marginLeft: 40,
+    ...FONTS.body3_bangla,
+  },
   infoContainer: {
     padding: 10,
+  },
+  textInput: {
+    flex: 1,
+    ...FONTS.body2_bangla,
+    marginRight: 20,
   },
 });
 
