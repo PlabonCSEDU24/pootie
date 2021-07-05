@@ -26,7 +26,7 @@ const CustomHeader = ({ navigation, title, showSearch }) => {
             navigation.navigate("search");
           }}
         >
-          <Ionicons name="search-circle" size={30} color="black" />
+          <Ionicons name="search-circle" size={30} color={COLORS.black} />
         </TouchableOpacity>
       )}
     </View>

@@ -18,6 +18,7 @@ import { TextInput } from "react-native-gesture-handler";
 import Carousel from "../../components/Carousel";
 import FilledButton from "../../components/FilledButton";
 import { useHttpClient } from "../../uitls/http-hook";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const PostDetail = ({ route, navigation }) => {
   const { isLoading, sendRequest } = useHttpClient();
   const [myComment, setMyComment] = useState("");
@@ -46,6 +47,29 @@ const PostDetail = ({ route, navigation }) => {
       SellerContact = "telpropmpt:$(" + SellerContact + ")";
     }
     Linking.openURL(SellerContact);
+  };
+
+  const bookmarkPost = async (post) => {
+    try {
+      let posts = await AsyncStorage.getItem("@bookmarked");
+      if (posts !== null) {
+        posts = JSON.parse(posts);
+        console.log(posts);
+      } else {
+        posts = [];
+      }
+      let hasFound = false;
+      posts.forEach((p) => {
+        if (p._id == post._id) {
+          hasFound = true;
+        }
+      });
+
+      !hasFound && posts.push(post);
+      await AsyncStorage.setItem("@bookmarked", JSON.stringify(posts));
+    } catch (err) {
+      console.log(err);
+    }
   };
   const fetchComments = async () => {
     try {
@@ -129,7 +153,7 @@ const PostDetail = ({ route, navigation }) => {
                   <TimeAgo
                     style={styles.timeText}
                     hideAgo={true}
-                    time={comment.time}
+                    time={comment.createdAt}
                   />
                 </View>
               );
@@ -167,7 +191,16 @@ const PostDetail = ({ route, navigation }) => {
         <TouchableOpacity
           style={styles.saveBtn}
           onPress={() => {
-            console.log("Post Saved!");
+            bookmarkPost({
+              _id: _id,
+              bookName: bookName,
+              price: price,
+              author: author,
+              description: description,
+              photos: photos,
+              contactInfo: contactInfo,
+              createdAt: createdAt,
+            });
           }}
           activeOpacity={0.2}
         >

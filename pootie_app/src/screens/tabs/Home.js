@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { COLORS } from "../../constants";
 import Context from "../../context/Context";
 import Categories from "../../sections/Categories";

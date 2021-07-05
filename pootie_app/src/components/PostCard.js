@@ -2,25 +2,33 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { COLORS, FONTS } from "../constants";
 import { BACKEND_URL } from "../constants/config";
+import { AntDesign } from "@expo/vector-icons";
 const maxLength = 20;
-const PostCard = ({ item, onPress }) => {
+const PostCard = ({ item, onPress, deletable, onDelete }) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image
-        style={styles.image}
-        source={{
-          uri: `${BACKEND_URL}/api/contents/images/${item.photos[0].fileName}`,
-        }}
-      />
-      <View style={styles.infoContainer}>
-        <Text style={styles.bookText}>
-          {item.bookName.length > maxLength
-            ? item.bookName.substring(0, maxLength - 3) + "..."
-            : item.bookName}
-        </Text>
-        <Text style={styles.priceText}>{"৳ " + item.price}</Text>
-      </View>
-    </TouchableOpacity>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={onPress}>
+        <Image
+          style={styles.image}
+          source={{
+            uri: `${BACKEND_URL}/api/contents/images/${item.photos[0].fileName}`,
+          }}
+        />
+        <View style={styles.infoContainer}>
+          <Text style={styles.bookText}>
+            {item.bookName.length > maxLength
+              ? item.bookName.substring(0, maxLength - 3) + "..."
+              : item.bookName}
+          </Text>
+          <Text style={styles.priceText}>{"৳ " + item.price}</Text>
+        </View>
+      </TouchableOpacity>
+      {deletable && (
+        <TouchableOpacity onPress={onDelete} style={styles.deleteBtn}>
+          <AntDesign name="delete" size={24} color={COLORS.white} />
+        </TouchableOpacity>
+      )}
+    </View>
   );
 };
 
@@ -50,5 +58,14 @@ const styles = StyleSheet.create({
   priceText: {
     ...FONTS.body3_bangla,
     color: COLORS.links,
+  },
+  deleteBtn: {
+    height: 40,
+    width: 50,
+    backgroundColor: COLORS.links,
+    position: "absolute",
+    right: 0,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

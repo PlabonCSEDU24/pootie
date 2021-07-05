@@ -9,8 +9,9 @@ import {
 } from "react-native";
 import PostCard from "../components/PostCard";
 import { COLORS, SIZES } from "../constants";
+import { deleteFromBookmark } from "../uitls/deleteBookmark";
 
-const Posts = ({ posts, navigation }) => {
+const Posts = ({ posts, navigation, deletable, onSuccessDeletion }) => {
   return (
     <View style={styles.container}>
       {posts.length === 0 && (
@@ -29,9 +30,14 @@ const Posts = ({ posts, navigation }) => {
           renderItem={({ item }) => {
             return (
               <PostCard
+                deletable={deletable ? true : false}
                 item={item}
                 onPress={() => {
                   navigation.navigate("postDetail", item);
+                }}
+                onDelete={() => {
+                  deleteFromBookmark(item._id);
+                  onSuccessDeletion();
                 }}
               />
             );

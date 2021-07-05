@@ -11,8 +11,8 @@ import HomeStack from "./HomeStack";
 import Context from "../context/Context";
 import AuthStack from "./AuthStack";
 import PostStack from "./postStack";
-import CreatePost from "../screens/tabs/CreatePost";
 import ProfileStack from "./ProfileStack";
+import BookmarkStack from "./BookmarkStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -103,8 +103,8 @@ export default function TabNavigator() {
         ></Tab.Screen>
 
         <Tab.Screen
-          name={"Notifications"}
-          component={CreatePost}
+          name={"bookmarks"}
+          component={isLoggedIn ? BookmarkStack : AuthStack}
           options={{
             tabBarIcon: ({ focused }) => (
               <AntDesign
