@@ -37,6 +37,7 @@ const PostDetail = ({ route, navigation }) => {
     fetchComments();
   }, []);
 
+  const maxLength = 20;
   const makeCall = () => {
     let SellerContact = contactInfo.phone;
     if (Platform.OS === "android") {
@@ -82,7 +83,14 @@ const PostDetail = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header title={bookName} navigation={navigation} />
+      <Header
+        title={
+          bookName.length > maxLength
+            ? bookName.substring(0, maxLength - 3) + "..."
+            : bookName
+        }
+        navigation={navigation}
+      />
       <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
         <Carousel data={photos} />
         <View style={styles.infoContainer}>
@@ -194,6 +202,7 @@ const styles = StyleSheet.create({
   },
   bookName: {
     ...FONTS.body1,
+    maxWidth: "80%",
   },
   div: {
     borderBottomWidth: 1,

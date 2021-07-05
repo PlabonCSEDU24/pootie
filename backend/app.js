@@ -15,10 +15,10 @@ const app = express();
 
 app.use(compression());
 app.use(cors());
-app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+app.use(express.json());
 app.use("/api/contents", express.static("public/"));
-
 app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
 
@@ -34,6 +34,17 @@ mongoose
 
 const server = app.listen(process.env.PORT || PORT, async () => {
   console.log(`server started on port ${PORT}`);
+});
+
+app.use(function (err, req, res, next) {
+  if (err) {
+    return res
+      .status(500)
+      .send({ msg: err.message || "Something bad happened 🙃" });
+
+  } else {
+    return res.status(400).send({ msg: "🙃 Something went wrong! 😐"})
+  }
 });
 
 app.use("/", (req, res) => {

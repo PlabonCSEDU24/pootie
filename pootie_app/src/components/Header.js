@@ -1,9 +1,23 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import { COLORS, FONTS } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
 
-const Header = ({ navigation, title }) => {
+const Header = ({
+  navigation,
+  title,
+  search,
+  inputRef,
+  searchText,
+  setSearchText,
+  onSubmit,
+}) => {
   return (
     <View style={styles.header}>
       <TouchableOpacity
@@ -13,7 +27,22 @@ const Header = ({ navigation, title }) => {
       >
         <Ionicons name="chevron-back-sharp" size={24} color="black" />
       </TouchableOpacity>
-      <Text style={styles.title}>{title}</Text>
+      {!search && <Text style={styles.title}>{title}</Text>}
+      {search && (
+        <View style={styles.searchContainer}>
+          <TextInput
+            value={searchText}
+            onChangeText={(text) => {
+              setSearchText(text);
+            }}
+            onSubmitEditing={onSubmit}
+            ref={inputRef}
+            style={styles.input}
+            selectionColor={COLORS.primary}
+            placeholder={"seacth here..."}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -34,5 +63,17 @@ const styles = StyleSheet.create({
   title: {
     marginLeft: 20,
     ...FONTS.body2_bangla,
+  },
+  searchContainer: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: COLORS.lightGray2,
+    marginHorizontal: 20,
+    paddingVertical: 2,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+  },
+  input: {
+    width: "100%",
   },
 });

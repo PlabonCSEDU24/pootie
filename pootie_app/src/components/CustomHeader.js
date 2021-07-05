@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { COLORS, FONTS, SIZES } from "../constants";
-const CustomHeader = ({ navigation, title }) => {
+const CustomHeader = ({ navigation, title, showSearch }) => {
   const handleDrawer = () => {
     navigation.toggleDrawer();
   };
@@ -18,6 +19,16 @@ const CustomHeader = ({ navigation, title }) => {
       <View>
         <Text style={styles.title}>{title}</Text>
       </View>
+      {showSearch && (
+        <TouchableOpacity
+          style={styles.srcIcon}
+          onPress={() => {
+            navigation.navigate("search");
+          }}
+        >
+          <Ionicons name="search-circle" size={30} color="black" />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -39,5 +50,9 @@ const styles = StyleSheet.create({
   title: {
     ...FONTS.body3,
     color: COLORS.lightGray,
+  },
+  srcIcon: {
+    position: "absolute",
+    right: -4,
   },
 });

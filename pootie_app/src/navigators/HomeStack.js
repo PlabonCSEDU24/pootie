@@ -5,6 +5,7 @@ import { Text } from "react-native";
 import PostDetail from "../screens/nested/PostDetail";
 import CustomHeader from "../components/CustomHeader";
 import PostsByCategory from "../screens/nested/PostsByCategory";
+import Search from "../screens/nested/Search";
 const Stack = createStackNavigator();
 const HomeStack = () => {
   return (
@@ -14,7 +15,7 @@ const HomeStack = () => {
         component={Home}
         options={({ navigation, route }) => ({
           headerTitle: () => (
-            <CustomHeader navigation={navigation} title={"পু টি"} />
+            <CustomHeader navigation={navigation} title={"পু টি"} showSearch />
           ),
         })}
       />
@@ -27,6 +28,11 @@ const HomeStack = () => {
         options={{ headerShown: false }}
         name="postsByCategory"
         component={PostsByCategory}
+      />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="search"
+        component={Search}
       />
     </Stack.Navigator>
   );
